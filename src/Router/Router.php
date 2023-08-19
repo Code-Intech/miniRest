@@ -14,54 +14,34 @@ class Router {
 
     protected static array $routers = [];
 
-    protected static $currentMiddleware;
-
-    public function __construct()
-    {
+    public static function get($uri, $action, $middleware = []){
+        self::add(Router::METHOD_GET, $uri, $action, $middleware);
     }
 
-    public static function get($uri, $action): Router
-    {
-        self::add(Router::METHOD_GET, $uri, $action);
-        return new Router(Router::METHOD_GET, $uri, $action);
+    public static function post($uri, $action, $middleware = []) {
+        self::add(Router::METHOD_POST, $uri, $action, $middleware);
     }
 
-    public static function post($uri, $action): Router {
-        self::add(Router::METHOD_POST, $uri, $action);
-        return new Router(Router::METHOD_POST, $uri, $action);
+    public static function put($uri, $action, $middleware = []) {
+        self::add(Router::METHOD_PUT, $uri, $action, $middleware);
     }
 
-    public static function put($uri, $action) {
-        self::add(Router::METHOD_PUT, $uri, $action);
-        return new Router(Router::METHOD_PUT, $uri, $action);
+    public static function delete($uri, $action, $middleware = []) {
+        self::add(Router::METHOD_DELETE, $uri, $action, $middleware);
     }
 
-    public static function delete($uri, $action) {
-        self::add(Router::METHOD_DELETE, $uri, $action);
-        return new Router(Router::METHOD_DELETE, $uri, $action);
+    public static function patch($uri, $action, $middleware = []) {
+        self::add(Router::METHOD_PATCH, $uri, $action, $middleware);
     }
 
-    public static function patch($uri, $action) {
-        self::add(Router::METHOD_PATCH, $uri, $action);
-        return new Router(Router::METHOD_PATCH, $uri, $action);
-    }
-
-    public function middleware($middleware): self
-    {
-        // Defina o middleware atual para ser usado durante a execução
-        self::$currentMiddleware = $middleware;
-        return $this;
-    }
-
-
-    private static function add($method, $route, $action): void
+    private static function add($method, $route, $action, $middlewares = []): void
     {
         $pattern = '#^' . preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $route) . '$#';
-
         self::$routers[] = [
             'method' => $method,
             'route' => $pattern, // Padrão regex com parâmetros capturados
             'action' => $action,
+            'middlewares' => $middlewares,
         ];
     }
 
@@ -79,12 +59,15 @@ class Router {
             if ($route['method'] === $method && preg_match($route['route'], $uri, $matches)) {
                 array_shift($matches);
 
-                if (self::$currentMiddleware) {
-                    $route['action']['middleware'] = self::$currentMiddleware;
-                    self::$currentMiddleware = null;
+                $middlewareList = [];
+                if (isset($route['middlewares']) && count($route['middlewares']) > 0) {
+
+                    foreach ($route['middlewares'] as $middleware) {
+                        $middlewareList[] = new $middleware();
+                    }
                 }
 
-                self::executeAction($request ,$route['action'], $matches);
+                self::executeAction($request ,$route['action'], $matches, $middlewareList);
                 return;
             }
         }
@@ -95,16 +78,9 @@ class Router {
     /**
      * @throws \ReflectionException
      */
-    protected static function executeAction(Request $request, $action, $params): void
+    protected static function executeAction(Request $request, $action, $params, $middlewares = null): void
     {
         [$controllerClass, $method] = $action;
-
-        $controllerAction = $action;
-
-        $middleware = null;
-        if (isset($controllerAction['middleware'])) {
-            $middleware = new $controllerAction['middleware']();
-        }
 
         $controller = new $controllerClass();
 
@@ -119,10 +95,12 @@ class Router {
             }
         }
 
-        if ($middleware) {
-            $middleware->handle($request, $params, function () use ($controller, $method, $parameters) {
-                $controller->$method(...$parameters);
-            });
+        if ($middlewares) {
+            foreach ($middlewares as $middleware) {
+                $middleware->handle($request, $params, function () use ($controller, $method, $parameters) {
+                    $controller->$method(...$parameters);
+                });
+            }
         } else {
             $controller->$method(...$parameters);
         }
