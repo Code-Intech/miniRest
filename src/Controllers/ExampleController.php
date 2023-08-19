@@ -18,7 +18,7 @@ class ExampleController
     /**
      * @throws \Exception
      */
-    public function store(Request $request, string $id)
+    public function store(Request $request, ?string $id)
     {
         $nome = $request->json('nome');
         $idade = $request->json('idade');
