@@ -1,0 +1,17 @@
+{
+    "name": "ms580/mini-rest",
+    "autoload": {
+        "psr-4": {
+            "MiniRest\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marcone Santos",
+            "email": "98716688+Marcone-Santos1@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "ext-json": "*"
+    }
+}
