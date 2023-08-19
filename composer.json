@@ -12,6 +12,8 @@
         }
     ],
     "require": {
-        "ext-json": "*"
+        "ext-json": "*",
+        "vlucas/phpdotenv": "^5.5",
+        "illuminate/database": "^10.19"
     }
 }
