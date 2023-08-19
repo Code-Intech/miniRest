@@ -18,16 +18,15 @@ class ExampleController
     /**
      * @throws \Exception
      */
-    public function store(Request $request)
+    public function store(Request $request, string $id)
     {
         $nome = $request->json('nome');
         $idade = $request->json('idade');
-        $testeGet = $request->get('teste');
 
         Response::json(['pessoa' => [
             'nome' => $nome,
             'idade' => $idade,
-            'testeGet' => $testeGet
+            'id' => $id
         ]]);
     }
 }

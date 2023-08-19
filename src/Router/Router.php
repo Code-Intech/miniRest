@@ -40,23 +40,28 @@ class Router {
 
     private static function add($method, $route, $action): void
     {
+        $pattern = '#^' . preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $route) . '$#';
         self::$routers[] = [
             'method' => $method,
-            'route' => $route,
+            'route' => $pattern, // Padrão regex com parâmetros capturados
             'action' => $action,
         ];
     }
 
-    public static function dispatch(): void
+    /**
+     * @throws \ReflectionException
+     */
+    public static function dispatch(Request $request): void
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
+        $matches = [];
 
         foreach (self::$routers as $route)
         {
-            if ($route['method'] === $method && self::matchRoute($route['route'], $uri)) {
-
-                self::executeAction($route['action'], $uri);
+            if ($route['method'] === $method && preg_match($route['route'], $uri, $matches)) {
+                array_shift($matches);
+                self::executeAction($request ,$route['action'], $matches);
                 return;
             }
         }
@@ -64,15 +69,10 @@ class Router {
         Response::json(['error' => 'Route not found'], 404);
     }
 
-    protected static function matchRoute($pattern, $uri) {
-        $pattern = preg_replace('/\{.*?\}/', '([^/]+)', $pattern);
-        return preg_match("#^$pattern$#", $uri);
-    }
-
     /**
      * @throws \ReflectionException
      */
-    protected static function executeAction($action, $uri): void
+    protected static function executeAction(Request $request, $action, $params): void
     {
         [$controllerClass, $method] = $action;
 
@@ -83,7 +83,9 @@ class Router {
 
         foreach ($reflectionMethod->getParameters() as $param) {
             if ($param->getType() && $param->getType()->getName() === Request::class) {
-                $parameters[] = new Request();
+                $parameters[] = $request;
+            } else {
+                $parameters[] = array_shift($params);
             }
         }
 
