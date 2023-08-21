@@ -1,7 +1,7 @@
 <?php
 
 use MiniRest\Http\Controllers\ExampleController;
-use MiniRest\Http\Middleware\ExampleMiddleware;
+use MiniRest\Http\Middlewares\ExampleMiddleware;
 use MiniRest\Router\Router;
 
 Router::get('/store/getAll', [ExampleController::class, 'index']);
