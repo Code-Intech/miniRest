@@ -3,12 +3,13 @@
 namespace MiniRest\Controllers;
 use MiniRest\Http\Request;
 use MiniRest\Http\Response;
+use MiniRest\Models\User;
 
 class ExampleController
 {
     public function index()
     {
-        Response::json(['teste' => 'teste']);
+        Response::json(['user' => User::all()]);
     }
     public function teste()
     {

@@ -3,7 +3,10 @@
     "autoload": {
         "psr-4": {
             "MiniRest\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Models"
+        ]
     },
     "authors": [
         {
