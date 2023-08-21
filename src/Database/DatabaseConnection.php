@@ -8,7 +8,7 @@ class DatabaseConnection
     {
         $capsule = new Capsule;
         $capsule->addConnection([
-            'driver' => getenv('DB_CONNECTION'),
+            'driver' => getenv('DB_CONNECTION') ?? 'mysql',
             'host' => getenv('DB_HOST'),
             'port' => getenv('DB_PORT'),
             'database' => getenv('DB_DATABASE'),
