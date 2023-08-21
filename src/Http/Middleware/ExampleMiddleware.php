@@ -1,6 +1,6 @@
 <?php
 
-namespace MiniRest\Middleware;
+namespace MiniRest\Http\Middleware;
 
 use MiniRest\Http\Request;
 use MiniRest\Http\Response;

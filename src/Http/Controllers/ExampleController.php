@@ -1,6 +1,6 @@
 <?php
 
-namespace MiniRest\Controllers;
+namespace MiniRest\Http\Controllers;
 use MiniRest\Http\Request;
 use MiniRest\Http\Response;
 use MiniRest\Models\User;
