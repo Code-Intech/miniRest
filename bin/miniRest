@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use MiniRest\Console\RunServeCommand;
+
+if (PHP_OS_FAMILY === 'Linux') {
+    shell_exec('chmod +x ' . __FILE__);
+}
+
+if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
+    $command = 'icacls "' . __FILE__ . '" /grant Everyone:RX';
+    shell_exec($command);
+}
+
+$app = new Application;
+$app->add(new RunServeCommand());
+$app->run();
