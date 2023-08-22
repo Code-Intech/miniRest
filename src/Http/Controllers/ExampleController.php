@@ -13,7 +13,7 @@ class ExampleController
     }
     public function teste()
     {
-        Response::json(['test1' => 'rear']);
+        Response::json(['test1' => 'teste']);
     }
 
     /**
