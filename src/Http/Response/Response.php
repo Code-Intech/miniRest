@@ -1,6 +1,6 @@
 <?php
 
-namespace MiniRest\Http;
+namespace MiniRest\Http\Response;
 class Response {
     public static function json($data, $status = 200): void
     {

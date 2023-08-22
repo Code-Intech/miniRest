@@ -1,8 +1,8 @@
 <?php
 
 namespace MiniRest\Router;
-use MiniRest\Http\Request;
-use MiniRest\Http\Response;
+use MiniRest\Http\Request\Request;
+use MiniRest\Http\Response\Response;
 
 class Router {
 

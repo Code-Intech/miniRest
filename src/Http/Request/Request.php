@@ -1,6 +1,6 @@
 <?php
 
-namespace MiniRest\Http;
+namespace MiniRest\Http\Request;
 
 class Request {
 

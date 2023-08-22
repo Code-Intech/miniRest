@@ -1,7 +1,7 @@
 <?php
 
 namespace MiniRest\Core;
-use MiniRest\Http\Request;
+use MiniRest\Http\Request\Request;
 use MiniRest\Router\Router;
 
 class App {

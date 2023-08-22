@@ -2,7 +2,7 @@
 
 namespace MiniRest\Http\Middlewares;
 
-use MiniRest\Http\Request;
+use MiniRest\Http\Request\Request;
 
 interface MiddlewareInterface
 {
