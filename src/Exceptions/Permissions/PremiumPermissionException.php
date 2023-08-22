@@ -4,7 +4,7 @@ namespace MiniRest\Exceptions\Permissions;
 
 use Exception;
 
-class PremiumValidationException extends Exception
+class PremiumPermissionException extends Exception
 {
     public function __construct()
     {

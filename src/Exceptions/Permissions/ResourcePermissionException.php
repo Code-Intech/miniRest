@@ -4,7 +4,7 @@ namespace MiniRest\Exceptions\Permissions;
 
 use Exception;
 
-class ResourceValidationException extends Exception
+class ResourcePermissionException extends Exception
 {
     public function __construct($resource)
     {
