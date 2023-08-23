@@ -2,6 +2,7 @@
 
 namespace MiniRest\Http\Controllers;
 use MiniRest\Http\Request\Request;
+use MiniRest\Http\Request\RequestValidator;
 use MiniRest\Http\Response\Response;
 use MiniRest\Models\User;
 
@@ -23,6 +24,24 @@ class ExampleController
     {
         $nome = $request->json('nome');
         $idade = $request->json('idade');
+        $password = $request->json('password');
+
+        $data = [
+            'name' => $nome,
+            'idade' => $idade,
+            'password' => $password
+        ];
+
+        $validator = new RequestValidator();
+        $validator->rules([
+            'name' => 'required|string|max:255|min:22',
+            'idade' => 'required|string',
+            'password' => 'required|password:min_length=8',
+        ]);
+
+        $validationResult = $validator->validate($data);
+
+        var_dump($validationResult);
 
         Response::json(['pessoa' => [
             'nome' => $nome,
