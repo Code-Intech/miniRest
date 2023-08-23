@@ -9,7 +9,11 @@ class User extends Model
 
     protected $table = 'tb_user';
     protected $fillable = [
-        'name', 'email', 'password'
+        'Nome_completo', 'CPF', 'idtb_user'
+    ];
+
+    protected $hidden = [
+        'Senha'
     ];
 
 }

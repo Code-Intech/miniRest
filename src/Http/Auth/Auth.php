@@ -2,14 +2,16 @@
 
 namespace MiniRest\Http\Auth;
 
+use DomainException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use MiniRest\Exceptions\InvalidJWTToken;
 use MiniRest\Http\Request\Request;
 
 class Auth
 {
-    private static string $secretKey = 'your-secret-key';
-    private static int $tokenExpiration = 36; // Tempo de expiração em segundos (1 hora)
+    private static string $secretKey;
+    private static int $tokenExpiration; // Tempo de expiração em segundos (1 hora)
 
     public static function attempt(array $credentials): ?string
     {
@@ -30,12 +32,18 @@ class Auth
         return null;
     }
 
+    /**
+     * @throws InvalidJWTToken
+     */
     public static function check(Request $request): bool
     {
         $token = self::getTokenFromRequest($request);
         return self::validateToken($token);
     }
 
+    /**
+     * @throws InvalidJWTToken
+     */
     public static function user(Request $request): ?object
     {
         $token = self::getTokenFromRequest($request);
@@ -65,13 +73,35 @@ class Auth
         return null;
     }
 
+    /**
+     * @throws InvalidJWTToken
+     */
     public static function validateToken($token): bool
     {
+        if ($token === null) throw new InvalidJWTToken('Token NULL, Token inválido.');
+
         try {
             JWT::decode($token, new Key(self::$secretKey, 'HS256'));
             return true;
-        } catch (\Exception $e) {
-            return false;
+        } catch (DomainException) {
+            throw new InvalidJWTToken();
         }
+
+    }
+
+    /**
+     * @param string $secretKey
+     */
+    public static function setSecretKey(string $secretKey): void
+    {
+        self::$secretKey = $secretKey;
+    }
+
+    /**
+     * @param int $tokenExpiration
+     */
+    public static function setTokenExpiration(int $tokenExpiration): void
+    {
+        self::$tokenExpiration = $tokenExpiration;
     }
 }
