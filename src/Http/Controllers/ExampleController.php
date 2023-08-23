@@ -2,7 +2,7 @@
 
 namespace MiniRest\Http\Controllers;
 use MiniRest\Http\Request\Request;
-use MiniRest\Http\Request\RequestValidator;
+use MiniRest\Http\Request\RequestValidation\RequestValidator;
 use MiniRest\Http\Response\Response;
 use MiniRest\Models\User;
 
