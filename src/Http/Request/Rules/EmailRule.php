@@ -1,6 +1,6 @@
 <?php
 
-namespace MiniRest\Http\Request\RequestValidation\Rules;
+namespace MiniRest\Http\Request\Rules;
 
 use MiniRest\Http\Request\RequestValidation\ValidationRule;
 

@@ -51,4 +51,30 @@ class Request {
         $jsonData = file_get_contents('php://input');
         return json_decode($jsonData, true);
     }
+
+    public function headers(string $headerName)
+    {
+        $headers = $this->getAllHeaders();
+
+        if (isset($headers[$headerName])) {
+            return $headers[$headerName];
+        }
+
+        return null;
+    }
+
+    private function getAllHeaders(): array
+    {
+        $headers = [];
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) === 'HTTP_') {
+                $headerName = str_replace('_', ' ', substr($key, 5));
+                $headerName = ucwords(strtolower($headerName));
+                $headerName = str_replace(' ', '-', $headerName);
+                $headers[$headerName] = $value;
+            }
+        }
+
+        return $headers;
+    }
 }

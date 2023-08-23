@@ -19,6 +19,7 @@
         "vlucas/phpdotenv": "^5.5",
         "illuminate/database": "^10.19",
         "symfony/console": "^6.3",
-        "illuminate/pagination": "^10.19"
+        "illuminate/pagination": "^10.19",
+        "firebase/php-jwt": "^6.8"
     }
 }

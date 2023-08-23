@@ -11,7 +11,7 @@ class ValidationRuleFactory
      */
     public static function createRule($ruleName): ValidationRule
     {
-        $className =  "MiniRest\\Http\Request\\RequestValidation\\Rules\\" .
+        $className =  "MiniRest\\Http\Request\\Rules\\" .
             ucfirst($ruleName) . 'Rule';
 
         if (class_exists($className)) {
