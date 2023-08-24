@@ -1,6 +1,7 @@
 <?php
 
 namespace MiniRest\Router;
+use MiniRest\Http\Middlewares\CorsMiddleware;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 
@@ -13,6 +14,10 @@ class Router {
     private const METHOD_DELETE = 'DELETE';
 
     protected static array $routers = [];
+
+    public function __construct()
+    {
+    }
 
     public static function get($uri, $action, $middleware = []){
         self::add(Router::METHOD_GET, $uri, $action, $middleware);
@@ -56,9 +61,10 @@ class Router {
 
         foreach (self::$routers as $route)
         {
+            $route = self::gloabalMiddleware($route);
+
             if ($route['method'] === $method && preg_match($route['route'], $uri, $matches)) {
                 array_shift($matches);
-
                 $middlewareList = [];
                 if (isset($route['middlewares']) && count($route['middlewares']) > 0) {
 
@@ -104,6 +110,16 @@ class Router {
         } else {
             $controller->$method(...$parameters);
         }
+    }
+
+    /**
+     * @param mixed $route
+     * @return array|mixed
+     */
+    public static function gloabalMiddleware(mixed $route): mixed
+    {
+        $route['middlewares'][] = CorsMiddleware::class;
+        return $route;
     }
 
 }
