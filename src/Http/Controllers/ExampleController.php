@@ -10,7 +10,7 @@ class ExampleController
 {
     public function index()
     {
-        Response::json(['user' => User::all()]);
+        Response::json(['user' => User::paginate(10)]);
     }
     public function teste()
     {
