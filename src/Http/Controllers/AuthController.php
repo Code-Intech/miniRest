@@ -15,10 +15,23 @@ class AuthController
             'password' => $request->json('password'),
         ];
 
-        $token = Auth::attempt($credentials);
+        $validator = $request->rules([
+            'email' => 'required|email',
+            'password' => 'required|password:min_length=8',
+        ])->validate();
 
+        if ($validator) {
+            $erro = [];
+            foreach ($validator as $item){
+                $erro[] = $item[0];
+            }
+            Response::json(['errors' => $erro], 400);
+            return;
+        }
+
+        $token = Auth::attempt($credentials);
         if ($token) {
-            Response::json(['token' => $token, 'user' => $credentials]);
+            Response::json(['token' => $token]);
         } else {
             Response::json(['error' => 'Credenciais inválidas'], 401);
         }

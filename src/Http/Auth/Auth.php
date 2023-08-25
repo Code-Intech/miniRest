@@ -2,35 +2,44 @@
 
 namespace MiniRest\Http\Auth;
 
-use DomainException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MiniRest\Exceptions\InvalidJWTToken;
 use MiniRest\Http\Request\Request;
+use MiniRest\Models\User;
 
 class Auth
 {
     private static string $secretKey;
     private static int $tokenExpiration; // Tempo de expiração em segundos (1 hora)
 
-    public static function attempt(array $credentials): ?string
+    public static function attempt(array $credentials)
     {
-        if ($credentials['email'] === 'ms5806166@gmail.com' && $credentials['password'] === 'Teste1236@') {
+        try {
+            $user = User::where('Email', '=', $credentials['email'])
+                ->firstOrFail();
 
-            $now = time();
-            $expiration = $now + self::$tokenExpiration;
+            if (!password_verify($credentials['password'], $user->Senha)) {
+                return null;
+            }
 
-            $payload = [
-                'user_id' => 1,
-                'iat' => $now,       // Timestamp de emissão do token
-                'exp' => $expiration // Timestamp de expiração do token
-            ];
+            if ($user) {
+                $now = time();
+                $expiration = $now + self::$tokenExpiration;
 
-            return JWT::encode($payload, self::$secretKey, 'HS256');
+                $payload = [
+                    'user_id' => $user->idtb_user,
+                    'iat' => $now,       // Timestamp de emissão do token
+                    'exp' => $expiration // Timestamp de expiração do token
+                ];
+
+                return JWT::encode($payload, self::$secretKey, 'HS256');
+            }
+        } catch (ModelNotFoundException) {
+            return null;
         }
-
-        return null;
     }
 
     /**

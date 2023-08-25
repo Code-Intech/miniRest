@@ -5,11 +5,11 @@ use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 use MiniRest\Models\User;
 
-class ExampleController
+class ExampleController extends Controller
 {
     public function index()
     {
-        Response::json(['user' => User::paginate(10)]);
+        Response::json(['user' => $this->paginate(User::query())]);
     }
     public function teste()
     {
@@ -36,7 +36,7 @@ class ExampleController
              foreach ($validator as $item){
                  $erro[] = $item[0];
              }
-            Response::json(['errors' => $erro]);
+            Response::json(['errors' => $erro], 400);
             return;
         }
 
