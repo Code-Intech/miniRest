@@ -3,10 +3,10 @@
 namespace MiniRest\Http\Auth;
 
 use DomainException;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use MiniRest\Exceptions\InvalidJWTToken;
-use MiniRest\Exceptions\Validations\TokenValidationException;
 use MiniRest\Http\Request\Request;
 
 class Auth
@@ -75,17 +75,17 @@ class Auth
     }
 
     /**
-     * @throws TokenValidationException
+     * @throws InvalidJWTToken
      */
     public static function validateToken($token): bool
     {
-        if ($token === null) throw new TokenValidationException('Token NULL, Token inválido.');
+        if ($token === null) throw new InvalidJWTToken('Token NULL, Token inválido.');
 
         try {
             JWT::decode($token, new Key(self::$secretKey, 'HS256'));
             return true;
-        } catch (DomainException) {
-            throw new TokenValidationException();
+        } catch (ExpiredException) {
+            throw new InvalidJWTToken();
         }
 
     }
