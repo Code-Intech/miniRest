@@ -3,6 +3,7 @@
 namespace MiniRest\Http\Request\RequestValidation;
 
 use \Exception;
+use MiniRest\Http\Request\Request;
 
 class RequestValidator
 {
@@ -39,8 +40,11 @@ class RequestValidator
         return [$ruleName, $ruleParams];
     }
 
-    public function validate($data)
+    public function validate($data = null)
     {
+
+        if (!$data) $data = (new Request())->all()->get('json');
+
         $errorMessages = [];
         foreach ($this->rules as $field => $rules) {
 

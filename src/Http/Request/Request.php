@@ -2,7 +2,10 @@
 
 namespace MiniRest\Http\Request;
 
-class Request {
+use MiniRest\Http\Request\RequestValidation\RequestValidator;
+
+class Request extends RequestValidator
+{
 
     public function get($key, $default = null) {
 
