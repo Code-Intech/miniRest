@@ -2,15 +2,17 @@
 
 namespace MiniRest\Http\Middlewares;
 
+use Closure;
 use MiniRest\Http\Request\Request;
-use MiniRest\Http\Response\Response;
 
 class ExampleMiddleware implements MiddlewareInterface
 {
-    public function handle(Request $request, $params, callable $next)
+    public function handle(Request $request, Closure $next)
     {
-        if ((int)$params[0] > 100) return Response::json(['error' => 'Access not allowed'], 401);
-
-        return $next($request, $params);
+        if ($request->json('email') !== "ms5806166@gmail.com") {
+            var_dump('teste');
+            return 1;
+        }
+        return $next($request);
     }
 }

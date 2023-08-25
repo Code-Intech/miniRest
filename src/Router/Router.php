@@ -1,7 +1,7 @@
 <?php
 
 namespace MiniRest\Router;
-use MiniRest\Http\Middlewares\CorsMiddleware;
+use MiniRest\Http\Middlewares\MiddlewarePipeline;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 
@@ -61,8 +61,6 @@ class Router {
 
         foreach (self::$routers as $route)
         {
-            $route = self::gloabalMiddleware($route);
-
             if ($route['method'] === $method && preg_match($route['route'], $uri, $matches)) {
                 array_shift($matches);
                 $middlewareList = [];
@@ -90,6 +88,31 @@ class Router {
 
         $controller = new $controllerClass();
 
+        [$parameters, $params] = self::reflectionController($controllerClass, $method, $request, $params);
+
+        if (!$middlewares) {
+
+            $controller->$method(...$parameters);
+            return;
+        }
+
+        $middlewarePipeline = new MiddlewarePipeline();
+        $middlewarePipeline->send($request)->through($middlewares);
+        $middlewarePipeline->then(function ($passable) use ($controller, $method, $parameters) {
+            $controller->$method(...$parameters);
+        });
+    }
+
+    /**
+     * @param mixed $controllerClass
+     * @param mixed $method
+     * @param Request $request
+     * @param $params
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function reflectionController(mixed $controllerClass, mixed $method, Request $request, $params): array
+    {
         $reflectionMethod = new \ReflectionMethod($controllerClass, $method);
         $parameters = [];
 
@@ -100,26 +123,7 @@ class Router {
                 $parameters[] = array_shift($params);
             }
         }
-
-        if ($middlewares) {
-            foreach ($middlewares as $middleware) {
-                $middleware->handle($request, $params, function () use ($controller, $method, $parameters) {
-                    $controller->$method(...$parameters);
-                });
-            }
-        } else {
-            $controller->$method(...$parameters);
-        }
-    }
-
-    /**
-     * @param mixed $route
-     * @return array|mixed
-     */
-    public static function gloabalMiddleware(mixed $route): mixed
-    {
-        $route['middlewares'][] = CorsMiddleware::class;
-        return $route;
+        return array($parameters, $params);
     }
 
 }
