@@ -14,6 +14,8 @@ class Router {
     private const METHOD_DELETE = 'DELETE';
 
     protected static array $routers = [];
+    private static array $groupMiddlewares = [];
+    private static mixed $prefix = '';
 
     public function __construct()
     {
@@ -41,12 +43,15 @@ class Router {
 
     private static function add($method, $route, $action, $middlewares = []): void
     {
-        $pattern = '#^' . preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $route) . '$#';
+        $pattern = '#^' . preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', self::$prefix . $route) . '$#';
+
+        $mergedMiddlewares = array_merge(self::$groupMiddlewares, $middlewares);
+
         self::$routers[] = [
             'method' => $method,
             'route' => $pattern, // Padrão regex com parâmetros capturados
             'action' => $action,
-            'middlewares' => $middlewares,
+            'middlewares' => $mergedMiddlewares,
         ];
     }
 
@@ -124,6 +129,20 @@ class Router {
             }
         }
         return array($parameters, $params);
+    }
+
+    public static function prefix($prefix): Router
+    {
+        self::$prefix = $prefix;
+        return new Router();
+    }
+
+    public function group($middlewares, $callback): void
+    {
+        $groupMiddlewares = is_array($middlewares) ? $middlewares : [$middlewares];
+        self::$groupMiddlewares = array_merge(self::$groupMiddlewares, $groupMiddlewares);
+        $callback();
+        self::$groupMiddlewares = array_diff(self::$groupMiddlewares, $groupMiddlewares);
     }
 
 }
