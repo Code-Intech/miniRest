@@ -22,5 +22,8 @@
         "illuminate/pagination": "^10.19",
         "firebase/php-jwt": "^6.8",
         "ircmaxell/password-compat": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.3"
     }
 }
