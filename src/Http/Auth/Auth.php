@@ -5,40 +5,32 @@ namespace MiniRest\Http\Auth;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MiniRest\Exceptions\InvalidJWTToken;
+use MiniRest\Exceptions\UserNotFoundException;
 use MiniRest\Http\Request\Request;
-use MiniRest\Models\User;
+use MiniRest\Services\AuthService;
 
 class Auth
 {
-    private static string $secretKey;
-    private static int $tokenExpiration; // Tempo de expiração em segundos (1 hora)
 
-    public static function attempt(array $credentials)
+    private AuthService $authService;
+    public static string $secretKey;
+    public static int $tokenExpiration; // Tempo de expiração em segundos (1 hora)
+
+    public function __construct()
+    {
+        $this->authService = new AuthService();
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public static function attempt(array $credentials): bool|string
     {
         try {
-            $user = User::where('Email', '=', $credentials['email'])
-                ->firstOrFail();
-
-            if (!password_verify($credentials['password'], $user->Senha)) {
-                return null;
-            }
-
-            if ($user) {
-                $now = time();
-                $expiration = $now + self::$tokenExpiration;
-
-                $payload = [
-                    'user_id' => $user->idtb_user,
-                    'iat' => $now,       // Timestamp de emissão do token
-                    'exp' => $expiration // Timestamp de expiração do token
-                ];
-
-                return JWT::encode($payload, self::$secretKey, 'HS256');
-            }
-        } catch (ModelNotFoundException) {
-            return null;
+            return (new AuthService())->createToken($credentials);
+        } catch (UserNotFoundException $e) {
+            throw new UserNotFoundException($e->getMessage());
         }
     }
 
