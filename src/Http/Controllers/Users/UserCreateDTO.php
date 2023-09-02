@@ -56,7 +56,7 @@ class UserCreateDTO implements DTO
 
     public function validate(): array | bool
     {
-        return $this->request->validate([
+        return $this->request->rules([
             'nomeCompleto' => 'required|string|max:255|min:22',
             'dataNascimento' => 'required|string',
             'genero' => 'required|string',
@@ -68,6 +68,6 @@ class UserCreateDTO implements DTO
             'rua' => 'required|string',
             'regiao' => 'required|string',
             'bairro' => 'required|string'
-        ]);
+        ])->validate();
     }
 }
