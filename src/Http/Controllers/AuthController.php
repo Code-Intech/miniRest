@@ -17,15 +17,15 @@ class AuthController
     {
         $credentials = [
             'email' => $request->json('email'),
-            'password' => $request->json('password'),
+            'senha' => $request->json('senha'),
         ];
 
         $validator = $request->rules([
             'email' => 'required|email',
-            'password' => 'required|password:min_length=8',
+            'senha' => 'required|password:min_length=8',
         ])->validate();
 
-        if ($validator) {
+        if (is_array($validator) && count($validator) > 0) {
             $erro = [];
             foreach ($validator as $item){
                 $erro[] = $item[0];
