@@ -40,7 +40,7 @@ class RequestValidator
         return [$ruleName, $ruleParams];
     }
 
-    public function validate($data = null)
+    public function validate($data = null): array | bool
     {
 
         if (!$data) $data = (new Request())->all()->get('json');
@@ -48,7 +48,7 @@ class RequestValidator
         $errorMessages = [];
         foreach ($this->rules as $field => $rules) {
 
-            if (!isset($data[$field])) throw new Exception("Parametro \"$field\" não encontrada.");
+            if (!isset($data[$field])) $errorMessages[$field][] = "Parametro \"$field\" não encontrada.";
 
             foreach ($rules as $rule) {
                 if (!$rule['rule']->passes($data[$field], $rule['params'])) {
@@ -57,6 +57,9 @@ class RequestValidator
                 }
             }
         }
-        return $errorMessages;
+
+        if (count($errorMessages) > 0) return $errorMessages;
+
+        return true;
     }
 }

@@ -19,7 +19,7 @@ class AuthService
             $user = User::where('Email', '=', $credentials['email'])
                 ->firstOrFail();
 
-            if (!password_verify($credentials['password'], $user->Senha)) {
+            if (!password_verify($credentials['senha'], $user->Senha)) {
                 return throw new UserNotFoundException();
             }
 
