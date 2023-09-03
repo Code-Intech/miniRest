@@ -20,7 +20,7 @@ class AuthService
                 ->firstOrFail();
 
             if (!password_verify($credentials['senha'], $user->Senha)) {
-                return throw new UserNotFoundException();
+                throw new UserNotFoundException();
             }
 
             if ($user) {
