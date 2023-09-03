@@ -48,7 +48,10 @@ class RequestValidator
         $errorMessages = [];
         foreach ($this->rules as $field => $rules) {
 
-            if (!isset($data[$field])) $errorMessages[$field][] = "Parametro \"$field\" não encontrada.";
+            if (!isset($data[$field])) {
+                $errorMessages[$field][] = "Parametro \"$field\" não encontrada.";
+                continue;
+            }
 
             foreach ($rules as $rule) {
                 if (!$rule['rule']->passes($data[$field], $rule['params'])) {
