@@ -59,7 +59,6 @@ class RequestValidator
         }
 
         if (count($errorMessages) > 0) return $errorMessages;
-
         return true;
     }
 }
