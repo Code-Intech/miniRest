@@ -3,6 +3,7 @@
 namespace MiniRest\Http\Request\RequestValidation;
 
 use Exception;
+use MiniRest\Exceptions\RuleNotFound;
 
 class ValidationRuleFactory
 {
@@ -18,6 +19,6 @@ class ValidationRuleFactory
             return new $className();
         }
 
-        throw new Exception("Regra de validação {$ruleName} não encontrada.");
+        throw new RuleNotFound("Regra de validação {$ruleName} não encontrada.");
     }
 }

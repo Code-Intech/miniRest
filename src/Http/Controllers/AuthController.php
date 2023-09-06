@@ -4,6 +4,7 @@ namespace MiniRest\Http\Controllers;
 
 use MiniRest\Exceptions\InvalidJWTToken;
 use MiniRest\Exceptions\UserNotFoundException;
+use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Http\Auth\Auth;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
@@ -11,7 +12,7 @@ use MiniRest\Http\Response\Response;
 class AuthController
 {
     /**
-     * @throws InvalidJWTToken
+     * @throws InvalidJWTToken|\Exception
      */
     public function login(Request $request): void
     {
@@ -30,14 +31,14 @@ class AuthController
             foreach ($validator as $item){
                 $erro[] = $item[0];
             }
-            Response::json(['errors' => $erro], 400);
+            Response::json(['errors' => $erro], StatusCode::REQUEST_ERROR);
             return;
         }
         try {
             $token = Auth::attempt($credentials);
 
             if ($token) {
-                Response::json(['token' => $token], 201);
+                Response::json(['token' => $token]);
             }
 
         } catch (UserNotFoundException $e) {

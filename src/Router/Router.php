@@ -1,6 +1,7 @@
 <?php
 
 namespace MiniRest\Router;
+use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Http\Middlewares\MiddlewarePipeline;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
@@ -81,7 +82,7 @@ class Router {
             }
         }
 
-        Response::json(['error' => 'Route not found'], 404);
+        Response::notFound();
     }
 
     /**
