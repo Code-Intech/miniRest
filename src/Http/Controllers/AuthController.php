@@ -37,11 +37,20 @@ class AuthController
             $token = Auth::attempt($credentials);
 
             if ($token) {
-                Response::json(['token' => $token]);
+                Response::json(['token' => $token], 201);
             }
 
         } catch (UserNotFoundException $e) {
             Response::json(['error' => $e->getMessage()], $e->getCode());
         }
+    }
+
+    public function profile(Request $request)
+    {
+        Response::json([
+            'success' => 'Valid token',
+            'user_id' => Auth::id($request)
+        ]);
+        return;
     }
 }
