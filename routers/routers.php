@@ -10,4 +10,5 @@ Router::post('/api/user/create', [UserController::class, 'store']);
 
 Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::get('/user/getAll', [UserController::class, 'index']);
+    Router::get('/profile', [AuthController::class, 'profile']);
 });
