@@ -2,6 +2,7 @@
 
 namespace MiniRest\Http\Controllers\Users;
 use MiniRest\Actions\User\UserCreateAction;
+use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Http\Controllers\AuthController;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
@@ -28,10 +29,14 @@ class UserController extends Controller
             foreach ($actionResult as $item){
                 $erro[] = $item[0];
             }
-            return Response::json(['errors' => $erro], 400);
-
+            Response::json(['errors' => $erro], StatusCode::REQUEST_ERROR);
+            return;
         }
 
-        (new AuthController())->login($request);
+        Response::json([
+            'message'=>'Usuário criado com sucesso',
+        ], StatusCode::CREATED);
+
+//        (new AuthController())->login($request);
     }
 }
