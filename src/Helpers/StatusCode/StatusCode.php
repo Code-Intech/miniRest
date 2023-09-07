@@ -2,11 +2,11 @@
 
 namespace MiniRest\Helpers\StatusCode;
 
-enum StatusCode: int
+class StatusCode
 {
-    case OK = 200;
-    case CREATED = 201;
-    case NOT_FOUND = 404;
-    case ACCESS_NOT_ALLOWED = 401;
-    case REQUEST_ERROR = 400;
+    public const OK = 200;
+    public const CREATED = 201;
+    public const NOT_FOUND = 404;
+    public const ACCESS_NOT_ALLOWED = 401;
+    public const REQUEST_ERROR = 400;
 }
