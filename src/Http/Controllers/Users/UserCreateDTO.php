@@ -54,20 +54,4 @@ class UserCreateDTO implements DTO
         ];
     }
 
-    public function validate(): array | bool
-    {
-        return $this->request->rules([
-            'nomeCompleto' => 'required|string|max:255|min:22',
-            'dataNascimento' => 'required|string',
-            'genero' => 'required|string',
-            'telefone' => 'required|string',
-            'email' => 'required|string',
-            'senha' => 'required|password:min_length=8',
-            'cpf' => 'required|string',
-            'cep' => 'required|string',
-            'rua' => 'required|string',
-            'regiao' => 'required|string',
-            'bairro' => 'required|string'
-        ])->validate();
-    }
 }

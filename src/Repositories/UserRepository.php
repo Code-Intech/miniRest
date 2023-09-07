@@ -25,4 +25,14 @@ class UserRepository
     {
         $this->user->create($user);
     }
+
+    public function update(int $id, array $user)
+    {
+        $this->user->where('idtb_user', '=', $id)->update($user);
+    }
+
+    public function remove(int $id, array $user)
+    {
+        $this->user->where('idtb_user', '=', $id)->update($user);
+    }
 }
