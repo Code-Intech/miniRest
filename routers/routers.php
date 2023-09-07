@@ -1,9 +1,12 @@
 <?php
 
 use MiniRest\Http\Controllers\AuthController;
+use MiniRest\Http\Controllers\HealthController;
 use MiniRest\Http\Controllers\Users\UserController;
 use MiniRest\Http\Middlewares\AuthMiddleware;
 use MiniRest\Router\Router;
+
+Router::get('/health', [HealthController::class, 'health']);
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
