@@ -6,6 +6,8 @@ use Dotenv\Dotenv;
 use MiniRest\Database\DatabaseConnection;
 use MiniRest\Http\Auth\Auth;
 
+date_default_timezone_set('America/Sao_Paulo');
+
 $dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../');
 $dotenv->load();
 new DatabaseConnection();
