@@ -29,6 +29,8 @@ class AuthService
 
                 $payload = [
                     'user_id' => $user->idtb_user,
+                    'user_email' => $user->Email,
+                    'user_name' => $user->Nome_completo,
                     'iat' => $now,       // Timestamp de emissão do token
                     'exp' => $expiration // Timestamp de expiração do token
                 ];
