@@ -2,6 +2,7 @@
 
 namespace MiniRest\Http\Auth;
 
+use DomainException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -85,7 +86,7 @@ class Auth
         try {
             JWT::decode($token, new Key(self::$secretKey, 'HS256'));
             return true;
-        } catch (ExpiredException) {
+        } catch (ExpiredException|DomainException) {
             throw new InvalidJWTToken();
         }
 
