@@ -18,8 +18,10 @@ class User extends Model
         'CPF',
         'CEP',
         'Rua',
-        'Regiao',
         'Bairro',
+        'tb_end_idtb_end',
+        'idgenero',
+        'FlgStatus'
     ];
 
     protected $hidden = [
