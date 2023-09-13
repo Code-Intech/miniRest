@@ -2,7 +2,7 @@
 
 namespace MiniRest\Actions\User;
 
-use MiniRest\Http\Controllers\Users\UserFlgStatusDTO;
+use MiniRest\DTO\UserFlgStatusDTO;
 use MiniRest\Repositories\UserRepository;
 
 class UserFlgStatusAction
