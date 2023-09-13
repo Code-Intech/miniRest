@@ -4,9 +4,11 @@ namespace MiniRest\Http\Controllers\Users;
 use MiniRest\Actions\User\UserCreateAction;
 use MiniRest\Actions\User\UserFlgStatusAction;
 use MiniRest\Actions\User\UserUpdateAction;
+use MiniRest\DTO\AddressCreateDTO;
+use MiniRest\DTO\UserCreateDTO;
+use MiniRest\DTO\UserFlgStatusDTO;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Http\Auth\Auth;
-use MiniRest\Http\Controllers\AuthController;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
@@ -27,15 +29,16 @@ class UserController extends Controller
         $validation = $request->rules([
             'nomeCompleto' => 'required|string|max:255',
             'dataNascimento' => 'required|string',
-            'genero' => 'required|string',
+            'genero' => 'required',
             'telefone' => 'required|string',
             'email' => 'required|string',
             'senha' => 'required|password:min_length=8',
             'cpf' => 'required|string',
             'cep' => 'required|string',
             'rua' => 'required|string',
-            'regiao' => 'required|string',
-            'bairro' => 'required|string'
+            'bairro' => 'required|string',
+            'cidade' => 'required|string',
+            'estado' => 'required|string'
         ])->validate();
 
         if (!$validation) {
@@ -43,9 +46,10 @@ class UserController extends Controller
             return;
         }
 
+        $addressDTO = new AddressCreateDTO($request);
         $userDTO = new UserCreateDTO($request);
 
-        (new UserCreateAction())->execute($userDTO);
+        (new UserCreateAction())->execute($userDTO, $addressDTO);
 
         Response::json([
             'message'=>'Usuário criado com sucesso',
@@ -56,19 +60,21 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $userId = Auth::id($request);
-
+        $userAddressId = Auth::user($request)->address_id;
+        var_dump($userAddressId);
         $validation = $request->rules([
             'nomeCompleto' => 'required|string|max:255',
             'dataNascimento' => 'required|string',
-            'genero' => 'required|string',
+            'genero' => 'required',
             'telefone' => 'required|string',
             'email' => 'required|string',
             'senha' => 'required|password:min_length=8',
             'cpf' => 'required|string',
             'cep' => 'required|string',
             'rua' => 'required|string',
-            'regiao' => 'required|string',
-            'bairro' => 'required|string'
+            'bairro' => 'required|string',
+            'cidade' => 'required|string',
+            'estado' => 'required|string'
         ])->validate();
 
         if (!$validation) {
@@ -76,9 +82,10 @@ class UserController extends Controller
             return;
         }
 
+        $addressDTO = new AddressCreateDTO($request);
         $userDTO = new UserCreateDTO($request);
 
-        (new UserUpdateAction())->execute($userId, $userDTO);
+        (new UserUpdateAction())->execute($userId, $userAddressId, $userDTO, $addressDTO);
 
         Response::json([
             'message'=>'Usuário atualizado com sucesso',
@@ -105,7 +112,7 @@ class UserController extends Controller
 
         Response::json([
             'message'=>'Usuário "flegado" com sucesso',
-        ], StatusCode::CREATED);
+        ]);
 
     }
 }
