@@ -6,6 +6,7 @@ use DomainException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use MiniRest\Exceptions\AccessNotAllowedException;
 use MiniRest\Exceptions\InvalidJWTToken;
 use MiniRest\Exceptions\UserNotFoundException;
 use MiniRest\Http\Request\Request;
@@ -30,7 +31,7 @@ class Auth
     {
         try {
             return (new AuthService())->createToken($credentials);
-        } catch (UserNotFoundException $e) {
+        } catch (UserNotFoundException|AccessNotAllowedException $e) {
             throw new UserNotFoundException($e->getMessage());
         }
     }
