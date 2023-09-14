@@ -16,7 +16,6 @@ class UserCreateAction
     {
         $address = $addressCreateDTO->toArray();
         $addressId = (new AddressRepository())->store($address);
-        var_dump($addressId);
 
         $userDTO->setAddress($addressId);
         $user = $userDTO->toArray();

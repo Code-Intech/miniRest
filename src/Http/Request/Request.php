@@ -83,7 +83,6 @@ class Request extends RequestValidator
 
     public function getMethod()
     {
-        var_dump($_SERVER['REQUEST_METHOD']);
         return $_SERVER['REQUEST_METHOD'];
     }
 }
