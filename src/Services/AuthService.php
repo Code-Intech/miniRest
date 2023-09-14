@@ -4,6 +4,7 @@ namespace MiniRest\Services;
 
 use Firebase\JWT\JWT;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use MiniRest\Exceptions\AccessNotAllowedException;
 use MiniRest\Exceptions\UserNotFoundException;
 use MiniRest\Http\Auth\Auth;
 use MiniRest\Models\User;
@@ -11,7 +12,7 @@ use MiniRest\Models\User;
 class AuthService
 {
     /**
-     * @throws UserNotFoundException
+     * @throws UserNotFoundException|AccessNotAllowedException
      */
     public function createToken(array $credentials): ?string
     {
@@ -22,6 +23,8 @@ class AuthService
             if (!password_verify($credentials['senha'], $user->Senha)) {
                 throw new UserNotFoundException();
             }
+
+            if ($user->FlgStatus === 1) throw new AccessNotAllowedException();
 
             if ($user) {
                 $now = time();
