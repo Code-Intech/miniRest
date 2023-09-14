@@ -31,9 +31,9 @@ class UserController extends Controller
             'dataNascimento' => 'required|string',
             'genero' => 'required',
             'telefone' => 'required|string',
-            'email' => 'required|string',
+            'email' => 'required|unique|string',
             'senha' => 'required|password:min_length=8',
-            'cpf' => 'required|string',
+            'cpf' => 'required|string|CPF',
             'cep' => 'required|string',
             'rua' => 'required|string',
             'bairro' => 'required|string',
@@ -61,7 +61,6 @@ class UserController extends Controller
     {
         $userId = Auth::id($request);
         $userAddressId = Auth::user($request)->address_id;
-        var_dump($userAddressId);
         $validation = $request->rules([
             'nomeCompleto' => 'required|string|max:255',
             'dataNascimento' => 'required|string',
