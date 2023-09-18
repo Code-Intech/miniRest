@@ -38,7 +38,8 @@ class UserController extends Controller
             'rua' => 'required|string',
             'bairro' => 'required|string',
             'cidade' => 'required|string',
-            'estado' => 'required|string'
+            'estado' => 'required|string',
+            'numero' => 'required'
         ])->validate();
 
         if (!$validation) {
@@ -59,6 +60,7 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        var_dump($request);
         $userId = Auth::id($request);
         $userAddressId = Auth::user($request)->address_id;
         $validation = $request->rules([

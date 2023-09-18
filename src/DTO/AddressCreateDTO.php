@@ -11,6 +11,7 @@ class AddressCreateDTO implements DTO
     public string $bairro;
     public string $cidade;
     public string $estado;
+    public string $numero;
 
     public function __construct(
         protected Request $request
@@ -21,6 +22,7 @@ class AddressCreateDTO implements DTO
         $this->bairro               = $request->json('bairro');
         $this->cidade               = $request->json('cidade');
         $this->estado               = $request->json('estado');
+        $this->numero               = $request->json('numero');
     }
 
 
@@ -33,6 +35,7 @@ class AddressCreateDTO implements DTO
             'Bairro' => $this->bairro,
             'Cidade' => $this->cidade,
             'Estado' => $this->estado,
+            'Numero' => $this->numero
         ];
     }
 }
