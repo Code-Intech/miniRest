@@ -9,12 +9,11 @@ class Response {
     public static function json(mixed $data = null, int | StatusCode $status = StatusCode::OK): void
     {
 
-//        if (!$data) throw new InvalidJsonResponseException();
+        if (!$data) throw new InvalidJsonResponseException();
 
-        header('Content-Type: image/png');
+        header('Content-Type: application/json');
         http_response_code($status);
-//        echo json_encode($data);
-        echo $data;
+        echo json_encode($data);
     }
 
     public static function anyType(mixed $data = null, string $type, int | StatusCode $status = StatusCode::OK): void
