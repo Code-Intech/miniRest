@@ -9,4 +9,5 @@ class StatusCode
     public const NOT_FOUND = 404;
     public const ACCESS_NOT_ALLOWED = 401;
     public const REQUEST_ERROR = 400;
+    public const SERVER_ERROR = 500;
 }
