@@ -1,6 +1,16 @@
 #!/usr/bin/env php
 <?php
 
+$folders = [
+    '/storage',
+];
+
+foreach ($folders as $folder) {
+    if (!file_exists(__DIR__ . $folder)) {
+        mkdir(__DIR__ . $folder, 0700);
+    }
+}
+
 require_once __DIR__.'/vendor/autoload.php';
 require_once __DIR__ . '/config/config.php';
 
@@ -16,6 +26,8 @@ if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
     $command = 'icacls "' . __FILE__ . '" /grant Everyone:RX';
     shell_exec($command);
 }
+
+
 
 $app = new Application;
 $app->add(new RunServeCommand());
