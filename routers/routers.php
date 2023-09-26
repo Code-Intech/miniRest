@@ -3,6 +3,7 @@
 use MiniRest\Http\Controllers\AuthController;
 use MiniRest\Http\Controllers\Gender\GenderController;
 use MiniRest\Http\Controllers\HealthController;
+use MiniRest\Http\Controllers\Upload\UploadController;
 use MiniRest\Http\Controllers\Users\UserController;
 use MiniRest\Http\Middlewares\AuthMiddleware;
 use MiniRest\Router\Router;
@@ -13,6 +14,9 @@ Router::get('/gender', [GenderController::class, 'index']);
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
+
+// file upload
+Router::post('/upload', [UploadController::class, 'upload']);
 
 Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
