@@ -30,6 +30,14 @@ class Request extends RequestValidator
         return $default;
     }
 
+    public function files($key, $default = null) {
+        if (isset($_FILES[$key])) {
+            return $_FILES[$key];
+        }
+
+        return $default;
+    }
+
     public function json($key, $default = null) {
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
@@ -46,6 +54,7 @@ class Request extends RequestValidator
         return new Collection([
             'get' => $_GET,
             'post' => $_POST,
+            'files' => $_FILES,
             'json' => $this->getJsonData(),
         ]);
     }
