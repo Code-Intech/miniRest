@@ -117,7 +117,7 @@ class Router {
      * @return array
      * @throws \ReflectionException
      */
-    public static function reflectionController(mixed $controllerClass, mixed $method, Request $request, $params): array
+    protected static function reflectionController(mixed $controllerClass, mixed $method, Request $request, $params): array
     {
         $reflectionMethod = new \ReflectionMethod($controllerClass, $method);
         $parameters = [];
