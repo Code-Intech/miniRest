@@ -4,15 +4,18 @@ namespace MiniRest\Http\Controllers\Upload;
 
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
-use MiniRest\Storage\StorageFactory;
+use MiniRest\Storage\S3Storage;
 
 class UploadController
 {
     public function upload(Request $request)
     {
-        var_dump($request->files('file'));
-        $storage = StorageFactory::createStorage('Disk', __DIR__ . '/../../../../storage');
-        $storage->put($request->files('file')['name'], file_get_contents($request->files('file')['tmp_name']));
-        Response::anyType($storage->get($request->files('file')['name']), $request->files('file')['type']);
+        $file = $request->files('file');
+        var_dump($file);
+
+        $storage = new S3Storage();
+        $storage->upload("teste/" . $file['name'], $file['tmp_name']);
+
+        Response::json(['calango' => $storage->generatePresignedUrl('teste/'. $file['name'])]);
     }
 }
