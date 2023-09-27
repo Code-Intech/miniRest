@@ -21,6 +21,11 @@ class UserRepository
             ->get();
     }
 
+    public function me(int $userId)
+    {
+        return $this->user->where('idtb_user', '=', $userId)->get();
+    }
+
     public function store(array $user)
     {
         $this->user->create($user);

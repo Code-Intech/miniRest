@@ -13,6 +13,7 @@ use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 use MiniRest\Models\User;
+use MiniRest\Repositories\UserRepository;
 
 class UserController extends Controller
 {
@@ -20,6 +21,13 @@ class UserController extends Controller
     {
         Response::json(['user' => $this->paginate(User::query())]);
     }
+
+    public function me(Request $request)
+    {
+        $userId = Auth::id($request);
+        Response::json(['User' => (new UserRepository())->me($userId)]);
+    }
+
 
     /**
      * @throws \Exception
@@ -60,7 +68,6 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        var_dump($request);
         $userId = Auth::id($request);
         $userAddressId = Auth::user($request)->address_id;
         $validation = $request->rules([
