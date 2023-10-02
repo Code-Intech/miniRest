@@ -3,12 +3,12 @@
 use MiniRest\Http\Controllers\AuthController;
 use MiniRest\Http\Controllers\Categories\CategoriesController;
 use MiniRest\Http\Controllers\Professions\ProfessionsController;
+use MiniRest\Http\Controllers\Skills\SkillsController;
 use MiniRest\Http\Controllers\Gender\GenderController;
 use MiniRest\Http\Controllers\HealthController;
 use MiniRest\Http\Controllers\Upload\UploadControllerExample;
 use MiniRest\Http\Controllers\Users\UserController;
 use MiniRest\Http\Middlewares\AuthMiddleware;
-use MiniRest\Models\Professions;
 use MiniRest\Router\Router;
 
 Router::post('/auth/login', [AuthController::class, 'login']);
@@ -36,3 +36,6 @@ Router::get('/gender', [GenderController::class, 'index']);
 //Categories
 Router::get('/categories',[CategoriesController::class, 'index']);
 Router::get('/professions',[ProfessionsController::class, 'index']);
+
+//Skills
+Router::get('/skills',[SkillsController::class, 'index']);
