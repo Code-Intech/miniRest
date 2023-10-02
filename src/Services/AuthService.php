@@ -24,7 +24,7 @@ class AuthService
                 throw new UserNotFoundException();
             }
 
-            if ($user->FlgStatus === 1) throw new AccessNotAllowedException();
+            if ($user->FlgStatus === 0) throw new AccessNotAllowedException();
 
             if ($user) {
                 $now = time();

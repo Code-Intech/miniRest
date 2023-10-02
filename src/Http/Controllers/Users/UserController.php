@@ -4,9 +4,11 @@ namespace MiniRest\Http\Controllers\Users;
 use MiniRest\Actions\User\UserCreateAction;
 use MiniRest\Actions\User\UserFlgStatusAction;
 use MiniRest\Actions\User\UserUpdateAction;
+use MiniRest\Actions\User\UserUploadAvatarAction;
 use MiniRest\DTO\AddressCreateDTO;
-use MiniRest\DTO\UserCreateDTO;
-use MiniRest\DTO\UserFlgStatusDTO;
+use MiniRest\DTO\User\UserCreateDTO;
+use MiniRest\DTO\User\UserFlgStatusDTO;
+use MiniRest\Exceptions\UploadErrorException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Http\Auth\Auth;
 use MiniRest\Http\Controllers\Controller;
@@ -27,6 +29,27 @@ class UserController extends Controller
         $userId = Auth::id($request);
         Response::json(['User' => (new UserRepository())->me($userId)]);
     }
+
+    public function avatar(Request $request)
+    {
+        $validation = $request->rules([
+            'avatar' => 'required'
+        ])->validate('files');
+
+        if (!$validation) {
+            $request->errors();
+            return;
+        }
+
+        try {
+            (new UserUploadAvatarAction())->execute($request);
+        } catch (UploadErrorException $e) {
+            Response::json(['error' => 'Error ao fazer o upload do arquivo'], $e->getCode());
+            return;
+        }
+        Response::json(['success' => 'Upload efetuado com sucesso']);
+    }
+
 
 
     /**

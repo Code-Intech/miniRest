@@ -3,7 +3,7 @@
 namespace MiniRest\Actions\User;
 
 use MiniRest\DTO\AddressCreateDTO;
-use MiniRest\DTO\UserCreateDTO;
+use MiniRest\DTO\User\UserCreateDTO;
 use MiniRest\Repositories\AddressRepository;
 use MiniRest\Repositories\UserRepository;
 

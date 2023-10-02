@@ -43,10 +43,10 @@ class RequestValidator
         return [$ruleName, $ruleParams];
     }
 
-    public function validate($data = null) : bool
+    public function validate($objectType = 'json') : bool
     {
 
-        if (!$data) $data = (new Request())->all()->get('json');
+        $data = (new Request())->all()->get($objectType);
 
         $this->errorMessages = [];
         foreach ($this->rules as $field => $rules) {

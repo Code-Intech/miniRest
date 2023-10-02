@@ -6,6 +6,7 @@ use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 use DateTime;
 use Exception;
+use MiniRest\Exceptions\UploadErrorException;
 
 class S3Storage
 {
@@ -36,7 +37,10 @@ class S3Storage
         ]);
     }
 
-    public function upload($remoteFilePath, $localFilePath): void
+    /**
+     * @throws UploadErrorException
+     */
+    public function upload($remoteFilePath, $localFilePath): bool
     {
         try {
             // Upload the file to S3
@@ -47,9 +51,9 @@ class S3Storage
                 'ACL' => 'private',
             ]);
 
-            echo 'File uploaded successfully!';
+            return true;
         } catch (Exception $e) {
-            echo 'Error uploading file: ' . $e->getMessage();
+            throw new UploadErrorException($e->getMessage());
         }
     }
 

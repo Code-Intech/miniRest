@@ -6,7 +6,7 @@ use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 use MiniRest\Storage\S3Storage;
 
-class UploadController
+class UploadControllerExample
 {
     public function upload(Request $request)
     {

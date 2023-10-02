@@ -5,7 +5,7 @@ use MiniRest\Http\Controllers\Categories\CategoriesController;
 use MiniRest\Http\Controllers\Professions\ProfessionsController;
 use MiniRest\Http\Controllers\Gender\GenderController;
 use MiniRest\Http\Controllers\HealthController;
-use MiniRest\Http\Controllers\Upload\UploadController;
+use MiniRest\Http\Controllers\Upload\UploadControllerExample;
 use MiniRest\Http\Controllers\Users\UserController;
 use MiniRest\Http\Middlewares\AuthMiddleware;
 use MiniRest\Models\Professions;
@@ -20,11 +20,14 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::get('/user/getAll', [UserController::class, 'index']);
     Router::patch('/user/update', [UserController::class, 'update']);
     Router::delete('/user/update/flg', [UserController::class, 'removeUser']);
-    Router::get('/profile', [AuthController::class, 'profile']);
     Router::get('/user/me', [UserController::class, 'me']);
 
-    // file upload
-    Router::post('/upload', [UploadController::class, 'upload']);
+    // User avatar upload
+    Router::post('/user/avatar', [UserController::class, 'avatar']);
+
+    // Verify jwt token from logged user
+    Router::get('/profile', [AuthController::class, 'profile']);
+
 });
 
 Router::get('/health', [HealthController::class, 'health']);

@@ -1,7 +1,8 @@
 <?php
 
-namespace MiniRest\DTO;
+namespace MiniRest\DTO\User;
 
+use MiniRest\DTO\DTO;
 use MiniRest\Http\Request\Request;
 
 class UserCreateDTO implements DTO

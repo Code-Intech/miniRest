@@ -2,16 +2,18 @@
 
 namespace MiniRest\Repositories;
 
+use MiniRest\Models\Photos;
 use MiniRest\Models\User;
 
 class UserRepository
 {
     protected User $user;
-    public function __construct(
+    protected Photos $photos;
 
-    )
+    public function __construct()
     {
         $this->user = new User();
+        $this->photos = new Photos();
     }
 
     public function getAll()
@@ -40,4 +42,16 @@ class UserRepository
     {
         $this->user->where('idtb_user', '=', $id)->update($user);
     }
+
+    public function storeAvatar(int $id)
+    {
+        $this->photos
+            ->where('idtb_user', '=', $id)
+            ->updateOrCreate(
+                ['departure' => 'Oakland', 'destination' => 'San Diego'],
+            );
+
+
+    }
+
 }
