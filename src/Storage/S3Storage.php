@@ -2,11 +2,14 @@
 
 namespace MiniRest\Storage;
 
+use AllowDynamicProperties;
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 use DateTime;
 use Exception;
 use MiniRest\Exceptions\UploadErrorException;
+use MiniRest\Storage\Acl\AclInterface;
+use MiniRest\Storage\Acl\PrivateAcl;
 
 class S3Storage
 {
@@ -14,15 +17,17 @@ class S3Storage
     private string $awsSecretAccessKey;
     private string $bucketName;
     private string $region;
-    private $s3Client;
+    private S3Client $s3Client;
+    private AclInterface $acl;
 
-    public function __construct()
+    public function __construct(AclInterface $acl = new PrivateAcl())
     {
         $this->awsAccessKeyId = getenv("AWS_ACCESS_KEY_ID");
         $this->awsSecretAccessKey = getenv("AWS_SECRET_ACCESS_KEY");
         $this->bucketName = getenv("AWS_BUCKET_NAME");
         $this->region = getenv("AWS_REGION");
         $this->setup();
+        $this->acl = $acl;
     }
 
     private function setup(): void
@@ -48,7 +53,7 @@ class S3Storage
                 'Bucket' => $this->bucketName,
                 'Key' => $remoteFilePath,
                 'SourceFile' => $localFilePath,
-                'ACL' => 'private',
+                'ACL' => $this->acl,
             ]);
 
             return true;
