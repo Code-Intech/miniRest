@@ -22,7 +22,9 @@
         "illuminate/pagination": "^10.19",
         "firebase/php-jwt": "^6.8",
         "ircmaxell/password-compat": "^1.0",
-        "aws/aws-sdk-php": "^3.281"
+        "aws/aws-sdk-php": "^3.281",
+        "ramsey/uuid": "^4.7",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.3"
