@@ -10,6 +10,7 @@ use Exception;
 use MiniRest\Exceptions\UploadErrorException;
 use MiniRest\Storage\Acl\AclInterface;
 use MiniRest\Storage\Acl\PrivateAcl;
+use Ramsey\Uuid\Uuid;
 
 class S3Storage
 {
@@ -53,7 +54,7 @@ class S3Storage
                 'Bucket' => $this->bucketName,
                 'Key' => $remoteFilePath,
                 'SourceFile' => $localFilePath,
-                'ACL' => $this->acl,
+                'ACL' => $this->acl->putObject(),
             ]);
 
             return true;
@@ -85,4 +86,17 @@ class S3Storage
             return null;
         }
     }
+
+    public function generatePublicdUrl($objectKey)
+    {
+        return $this->s3Client->getObjectUrl($this->bucketName, $objectKey);
+    }
+
+    public function uuidFileName(string $name): string
+    {
+        $rawFileNane = explode('.', $name);
+        $ext = $rawFileNane[1];
+        return $rawFileNane[0] = Uuid::uuid4() . ".$ext";
+    }
+
 }
