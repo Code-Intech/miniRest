@@ -27,7 +27,7 @@ class UserUploadAvatarAction
             throw new UploadErrorException($exception->getMessage());
         }
 
-        return ($storage->generatePublicdUrl($name));
+        return ($storage->generatePublicdUrl("avatar/" . $name));
     }
 
 }
