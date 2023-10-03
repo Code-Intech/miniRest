@@ -96,7 +96,7 @@ class S3Storage
     {
         $rawFileNane = explode('.', $name);
         $ext = $rawFileNane[1];
-        return $rawFileNane[0] = Uuid::uuid4() . ".$ext";
+        return str_replace('.', '-', $rawFileNane[0] = Uuid::uuid4()) . ".$ext";
     }
 
 }
