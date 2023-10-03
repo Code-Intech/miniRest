@@ -18,8 +18,8 @@ class AvatarController
         $userId = Auth::id($request);
 
         $validation = $request->rules([
-            'avatar' => 'required'
-        ])->validate('files');
+            'avatar' => 'required|file:png,jpg,jpeg',
+        ])->validate('files');;
 
         if (!$validation) {
             $request->errors();

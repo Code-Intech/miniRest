@@ -12,6 +12,8 @@ class RequestValidator
     protected $rules = [];
     protected $errorMessages = [];
 
+    protected string $objectType;
+
     /**
      * @throws \Exception
      */
@@ -23,14 +25,12 @@ class RequestValidator
             foreach (explode('|', $rule) as $rawRule) {
                 [$ruleName, $ruleParams] = $this->parseRule($rawRule);
                 $validationRule = ValidationRuleFactory::createRule($ruleName);
-
                 $this->rules[$field][] = [
                     'rule' => $validationRule,
                     'params' => $ruleParams,
                 ];
             }
         }
-
         return $this;
     }
 
@@ -43,8 +43,9 @@ class RequestValidator
         return [$ruleName, $ruleParams];
     }
 
-    public function validate($objectType = 'json') : bool
+    public function validate(string $objectType = 'json') : bool
     {
+        $this->objectType = $objectType;
 
         $data = (new Request())->all()->get($objectType);
 
@@ -71,7 +72,7 @@ class RequestValidator
 
     public function errors(): void
     {
-        if (!$this->validate() && count($this->errorMessages) > 0) {
+        if (!$this->validate($this->objectType) && count($this->errorMessages) > 0) {
             $erro = [];
             foreach ($this->errorMessages as $item){
                 $erro[] = $item[0];
