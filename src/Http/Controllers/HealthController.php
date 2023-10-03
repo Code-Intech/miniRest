@@ -6,7 +6,7 @@ use MiniRest\Http\Response\Response;
 
 class HealthController
 {
-    public function health()
+    public function health(): void
     {
         Response::json(["message" => "ok"]);
     }
