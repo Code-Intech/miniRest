@@ -140,10 +140,12 @@ class Router {
 
     public function group($middlewares, $callback): void
     {
+
         $groupMiddlewares = is_array($middlewares) ? $middlewares : [$middlewares];
         self::$groupMiddlewares = array_merge(self::$groupMiddlewares, $groupMiddlewares);
         $callback();
         self::$groupMiddlewares = array_diff(self::$groupMiddlewares, $groupMiddlewares);
+        self::$prefix = '';
     }
 
 }
