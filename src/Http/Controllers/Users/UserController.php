@@ -25,7 +25,7 @@ class UserController extends Controller
     public function me(Request $request)
     {
         $userId = Auth::id($request);
-        Response::json(['User' => (new UserRepository())->me($userId)]);
+        Response::json(['user' => (new UserRepository())->me($userId)]);
     }
 
     /**

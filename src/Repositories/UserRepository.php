@@ -23,7 +23,7 @@ class UserRepository
 
     public function me(int $userId)
     {
-        return $this->user->where('idtb_user', '=', $userId)->get();
+        return $this->user->where('idtb_user', '=', $userId)->first();
     }
 
     public function store(array $user)
