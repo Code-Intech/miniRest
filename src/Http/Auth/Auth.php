@@ -11,6 +11,7 @@ use MiniRest\Exceptions\InvalidJWTToken;
 use MiniRest\Exceptions\UserNotFoundException;
 use MiniRest\Http\Request\Request;
 use MiniRest\Services\AuthService;
+use UnexpectedValueException;
 
 class Auth
 {
@@ -87,7 +88,7 @@ class Auth
         try {
             JWT::decode($token, new Key(self::$secretKey, 'HS256'));
             return true;
-        } catch (ExpiredException|DomainException) {
+        } catch (ExpiredException|DomainException|UnexpectedValueException) {
             throw new InvalidJWTToken();
         }
 
