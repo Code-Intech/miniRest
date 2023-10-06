@@ -20,5 +20,3 @@ class SkillsController extends Controller
         Response::json(['skills' => $this->skills->getAll()]);
     }
 }
-
-?>

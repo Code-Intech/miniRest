@@ -32,8 +32,6 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     // Verify jwt token from logged user
     Router::get('/profile', [AuthController::class, 'profile']);
 
-    //Skills
-    Router::get('/skills', [SkillsController::class, 'index']);
 });
 
 Router::get('/health', [HealthController::class, 'health']);
@@ -42,3 +40,6 @@ Router::get('/gender', [GenderController::class, 'index']);
 //Categories
 Router::get('/categories', [CategoriesController::class, 'index']);
 Router::get('/professions', [ProfessionsController::class, 'index']);
+
+//Skills
+Router::get('/skills', [SkillsController::class, 'index']);
