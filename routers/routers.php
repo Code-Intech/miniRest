@@ -14,32 +14,36 @@ use MiniRest\Http\Controllers\{
     Users\UserController,
 };
 
-Router::post('/auth/login', [AuthController::class, 'login']);
-Router::post('/api/user/create', [UserController::class, 'store']);
+$router = new Router();
 
-Router::prefix('/api')->group([AuthMiddleware::class], function () {
+$router->set('POST', '/auth/login', [AuthController::class, 'login']);
+$router->set('POST', '/api/user/create', [UserController::class, 'store']);
+
+$router->prefix('/api')->group([AuthMiddleware::class], function () use($router) {
 
     // User
-    Router::get('/user/getAll', [UserController::class, 'index']);
-    Router::patch('/user/update', [UserController::class, 'update']);
-    Router::delete('/user/update/flg', [UserController::class, 'removeUser']);
-    Router::get('/user/me', [UserController::class, 'me']);
+    $router->set('GET', '/user/getAll', [UserController::class, 'index']);
+    $router->set('PATCH', '/user/update', [UserController::class, 'update']);
+    $router->set('DELETE', '/user/update/flg', [UserController::class, 'removeUser']);
+    $router->set('GET', '/user/me', [UserController::class, 'me']);
 
     // User avatar upload
-    Router::post('/user/upload/avatar', [AvatarController::class, 'uploadAvatar']);
-    Router::get('/user/avatar', [AvatarController::class, 'avatar']);
+    $router->set('POST', '/user/upload/avatar', [AvatarController::class, 'uploadAvatar']);
+    $router->set('GET', '/user/avatar', [AvatarController::class, 'avatar']);
 
     // Verify jwt token from logged user
-    Router::get('/profile', [AuthController::class, 'profile']);
+    $router->set('GET', '/profile', [AuthController::class, 'profile']);
 
 });
 
-Router::get('/health', [HealthController::class, 'health']);
-Router::get('/gender', [GenderController::class, 'index']);
+$router->set('GET', '/health', [HealthController::class, 'health']);
+$router->set('GET', '/gender', [GenderController::class, 'index']);
 
 //Categories
-Router::get('/categories', [CategoriesController::class, 'index']);
-Router::get('/professions', [ProfessionsController::class, 'index']);
+$router->set('GET', '/categories', [CategoriesController::class, 'index']);
+$router->set('GET', '/professions', [ProfessionsController::class, 'index']);
 
 //Skills
-Router::get('/skills', [SkillsController::class, 'index']);
+$router->set('GET', '/skills', [SkillsController::class, 'index']);
+
+$router->dispatch(new \MiniRest\Http\Request\Request());
