@@ -6,13 +6,13 @@ Foi criado para o desenvolvimento do projeto do laboratório de web do 4º semes
 
 ---
 ## Instalação
-```cmd
+```shell
 $ gh repo clone Code-Intech/miniRest
 ```
 
 ## Como rodar
 
-```cmd
+```shell
 $ composer install
 
 $ php miniRest serve
