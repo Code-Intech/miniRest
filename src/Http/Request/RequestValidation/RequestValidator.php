@@ -19,6 +19,7 @@ class RequestValidator
      */
     public function rules(array $rules)
     {
+        $this->rules = [];
         foreach ($rules as $field => $rule) {
             $this->rules[$field] = [];
 

@@ -7,6 +7,7 @@ use MiniRest\Http\Request\Request;
 use MiniRest\Repositories\AvatarRepository;
 use MiniRest\Storage\Acl\PublicAcl;
 use MiniRest\Storage\S3Storage;
+use MiniRest\Storage\UUIDFileName;
 use PDOException;
 
 class UserUploadAvatarAction
@@ -18,7 +19,7 @@ class UserUploadAvatarAction
     {
         $file = $request->files('avatar');
         $storage = new S3Storage(new PublicAcl());
-        $name = $storage->uuidFileName($file['name']);
+        $name = UUIDFileName::uuidFileName($file['name']);
 
         try {
             (new AvatarRepository())->storeAvatar($userId, $name);

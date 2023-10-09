@@ -92,11 +92,4 @@ class S3Storage
         return $this->s3Client->getObjectUrl($this->bucketName, $objectKey);
     }
 
-    public function uuidFileName(string $name): string
-    {
-        $rawFileNane = explode('.', $name);
-        $ext = end($rawFileNane);
-        return str_replace('.', '-', $rawFileNane[0] = Uuid::uuid4()) . ".$ext";
-    }
-
 }
