@@ -34,7 +34,7 @@ class PrestadorCreateDTO implements DTO
             'Valor_Da_Hora' => $this->valorHora,
             'Valor_diaria' => $this->valorDiaria,
             'Nome_Empresa' => $this->nomeEmpresa,
-            'CNPJ' => $this->cnpj,
+            'cnpj' => $this->cnpj,
             'tb_habilidades_idtb_habilidades' => $this->habilidades,
             'tb_prestador_profissao' => $this->profissoes,
             'Apresentacao' => $this->apresentacao

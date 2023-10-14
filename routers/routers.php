@@ -33,6 +33,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
     // Prestador
     Router::post('/prestador/create', [PrestadorController::class, 'store']);
+    Router::post('/prestador/update', [PrestadorController::class, 'update']);
 
 });
 

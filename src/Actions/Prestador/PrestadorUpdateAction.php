@@ -7,11 +7,9 @@ use MiniRest\DTO\Prestador\PrestadorCreateDTO;
 use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Repositories\Prestador\ApresentacaoRepository;
-use MiniRest\Repositories\Prestador\PrestadorProfessionRepository;
 use MiniRest\Repositories\Prestador\PrestadorRepository;
-use MiniRest\Repositories\Prestador\PrestadorSkillsRepository;
 
-class PrestadorCreateAction
+class PrestadorUpdateAction
 {
     /**
      * @throws DatabaseInsertException
@@ -22,20 +20,8 @@ class PrestadorCreateAction
 
         DB::beginTransaction();
         try {
-            $prestadorId = (new PrestadorRepository())->storePrestador($userId, $prestadorData);
-            (new ApresentacaoRepository())->storeApresentacao($userId, $prestadorId, $prestadorData);
-
-
-            foreach ($prestadorData['tb_prestador_profissao'] as $profissao)
-            {
-                (new PrestadorProfessionRepository())->storePrestadorProfession($userId, $prestadorId, $profissao);
-            }
-
-            foreach ($prestadorData['tb_habilidades_idtb_habilidades'] as $habilidades)
-            {
-                (new PrestadorSkillsRepository())->storePrestadorSkills($userId, $prestadorId, $habilidades);
-            }
-
+            (new PrestadorRepository())->updatePrestador($userId, $prestadorData);
+            (new ApresentacaoRepository())->updateApresentacao($userId, $prestadorData);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
