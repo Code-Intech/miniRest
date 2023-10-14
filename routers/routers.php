@@ -3,16 +3,15 @@
 use MiniRest\Http\Middlewares\AuthMiddleware;
 use MiniRest\Router\Router;
 
-use MiniRest\Http\Controllers\{
-    Avatar\AvatarController,
+use MiniRest\Http\Controllers\{Avatar\AvatarController,
     AuthController,
     Categories\CategoriesController,
+    Prestador\PrestadorController,
     Professions\ProfessionsController,
     Skills\SkillsController,
     Gender\GenderController,
     HealthController,
-    Users\UserController,
-};
+    Users\UserController};
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
@@ -31,6 +30,9 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
     // Verify jwt token from logged user
     Router::get('/profile', [AuthController::class, 'profile']);
+
+    // Prestador
+    Router::post('/prestador/create', [PrestadorController::class, 'store']);
 
 });
 
