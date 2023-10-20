@@ -71,6 +71,8 @@ class PrestadorRepository
                 unset($result->habilidades);
                 unset($result->profissoes_id);
                 unset($result->categorias_id);
+                unset($result->categorias);
+                unset($result->experiencia);
                 return $result;
             });
 
@@ -134,6 +136,8 @@ class PrestadorRepository
             unset($result->habilidades);
             unset($result->profissoes_id);
             unset($result->categorias_id);
+            unset($result->categorias);
+            unset($result->experiencia);
 
             return $result;
         });
@@ -198,6 +202,8 @@ class PrestadorRepository
             unset($result->habilidades);
             unset($result->profissoes_id);
             unset($result->categorias_id);
+            unset($result->categorias);
+            unset($result->experiencia);
 
             return $result;
         });
