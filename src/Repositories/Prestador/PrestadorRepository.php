@@ -19,16 +19,20 @@ class PrestadorRepository
     public function getAll()
     {
         $results = DB::table('tb_prestador')
-            ->select('tb_prestador.*')
+            ->select('tb_prestador.*', 'tb_apresentacao.Apresentacao as apresentacao' )
             ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
             ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.idtb_profissoes) as profissoes_id')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.Profissao) as profissoes')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.tb_categoria_idtb_categoria) as categorias_id')
+            ->selectRaw('GROUP_CONCAT(tb_categoria.Categoria) as categorias')
+            ->selectRaw('GROUP_CONCAT(tb_prestador_profissao.Experiencia) as experiencia')
             ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
             ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
             ->join('tb_prestador_profissao', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_profissao.tb_prestador_idtb_prestador')
             ->join('tb_profissoes', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes', '=', 'tb_profissoes.idtb_profissoes')
+            ->join('tb_categoria', 'tb_profissoes.tb_categoria_idtb_categoria', '=', 'tb_categoria.idtb_categoria')
+            ->join('tb_apresentacao', 'tb_prestador.idtb_prestador', '=', 'tb_apresentacao.tb_prestador_idtb_prestador')
             ->groupBy('tb_prestador.idtb_prestador')
             ->get();
         
@@ -38,6 +42,8 @@ class PrestadorRepository
                 $profissoesIds = explode(',', $result->profissoes_id);
                 $profissoes = explode(',', $result->profissoes);
                 $categoriasIds = explode(',', $result->categorias_id);
+                $categorias = explode(',', $result->categorias);
+                $experiencia = explode(',', $result->experiencia);
                 $skills = [];
                 $professions = [];
 
@@ -51,9 +57,10 @@ class PrestadorRepository
                 foreach ($profissoesIds as $index => $profissaoId) {
                     $professions[] = [
                         'id' => $profissaoId,
-                        'profissao' => $profissoes[$index],
+                        'Profissao' => $profissoes[$index],
                         'categoria_id' => $categoriasIds[$index],
-
+                        'Categoria' => $categorias[$index],
+                        'experiencia' => $experiencia[$index],
                     ];
                 }
 
@@ -74,16 +81,20 @@ class PrestadorRepository
     public function find(int|string $prestadorId)
     {
         $results = DB::table('tb_prestador')
-            ->select('tb_prestador.*')
+            ->select('tb_prestador.*', 'tb_apresentacao.Apresentacao as apresentacao')
             ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
             ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.idtb_profissoes) as profissoes_id')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.Profissao) as profissoes')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.tb_categoria_idtb_categoria) as categorias_id')
+            ->selectRaw('GROUP_CONCAT(tb_categoria.Categoria) as categorias')
+            ->selectRaw('GROUP_CONCAT(tb_prestador_profissao.Experiencia) as experiencia')
             ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
             ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
             ->join('tb_prestador_profissao', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_profissao.tb_prestador_idtb_prestador')
             ->join('tb_profissoes', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes', '=', 'tb_profissoes.idtb_profissoes')
+            ->join('tb_categoria', 'tb_profissoes.tb_categoria_idtb_categoria', '=', 'tb_categoria.idtb_categoria')
+            ->join('tb_apresentacao', 'tb_prestador.idtb_prestador', '=', 'tb_apresentacao.tb_prestador_idtb_prestador')
             ->groupBy('tb_prestador.idtb_prestador')
             ->where('tb_prestador.idtb_prestador', '=', $prestadorId)
             ->get();
@@ -94,6 +105,8 @@ class PrestadorRepository
             $profissoesIds = explode(',', $result->profissoes_id);
             $profissoes = explode(',', $result->profissoes);
             $categoriasIds = explode(',', $result->categorias_id);
+            $categorias = explode(',', $result->categorias);
+            $experiencia = explode(',', $result->experiencia);
             $skills = [];
             $professions = [];
 
@@ -107,8 +120,10 @@ class PrestadorRepository
             foreach ($profissoesIds as $index => $profissaoId) {
                 $professions[] = [
                     'id' => $profissaoId,
-                    'profissao' => $profissoes[$index],
+                    'Profissao' => $profissoes[$index],
                     'categoria_id' => $categoriasIds[$index],
+                    'Categoria' => $categorias[$index],
+                    'experiencia' => $experiencia[$index],
                 ];
             }
 
@@ -129,16 +144,20 @@ class PrestadorRepository
     public function me(int $userId)
     {
         $results = DB::table('tb_prestador')
-            ->select('tb_prestador.*')
+            ->select('tb_prestador.*', 'tb_apresentacao.Apresentacao as apresentacao')
             ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
             ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.idtb_profissoes) as profissoes_id')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.Profissao) as profissoes')
             ->selectRaw('GROUP_CONCAT(tb_profissoes.tb_categoria_idtb_categoria) as categorias_id')
+            ->selectRaw('GROUP_CONCAT(tb_categoria.Categoria) as categorias')
+            ->selectRaw('GROUP_CONCAT(tb_prestador_profissao.Experiencia) as experiencia')
             ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
             ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
             ->join('tb_prestador_profissao', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_profissao.tb_prestador_idtb_prestador')
             ->join('tb_profissoes', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes', '=', 'tb_profissoes.idtb_profissoes')
+            ->join('tb_categoria', 'tb_profissoes.tb_categoria_idtb_categoria', '=', 'tb_categoria.idtb_categoria')
+            ->join('tb_apresentacao', 'tb_prestador.idtb_prestador', '=', 'tb_apresentacao.tb_prestador_idtb_prestador')
             ->groupBy('tb_prestador.idtb_prestador')
             ->where('tb_prestador_habilidade.tb_prestador_tb_user_idtb_user', '=', $userId)
             ->get();
@@ -149,6 +168,8 @@ class PrestadorRepository
             $profissoesIds = explode(',', $result->profissoes_id);
             $profissoes = explode(',', $result->profissoes);
             $categoriasIds = explode(',', $result->categorias_id);
+            $categorias = explode(',', $result->categorias);
+            $experiencia = explode(',', $result->experiencia);
             $skills = [];
             $professions = [];
 
@@ -162,8 +183,11 @@ class PrestadorRepository
             foreach ($profissoesIds as $index => $profissaoId) {
                 $professions[] = [
                     'id' => $profissaoId,
-                    'profissao' => $profissoes[$index],
+                    'Profissao' => $profissoes[$index],
                     'categoria_id' => $categoriasIds[$index],
+                    'Categoria' => $categorias[$index],
+                    'experiencia' => $experiencia[$index],
+
                 ];
             }
 
