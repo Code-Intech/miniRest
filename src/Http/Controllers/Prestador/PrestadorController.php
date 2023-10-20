@@ -10,9 +10,27 @@ use MiniRest\Http\Auth\Auth;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
+use MiniRest\Repositories\Prestador\PrestadorRepository;
 
 class PrestadorController extends Controller
 {
+    private PrestadorRepository $prestador;
+
+    public function __construct()
+    {
+        $this->prestador = new PrestadorRepository();
+    }
+
+    public function index()
+    {
+        Response::json(['prestador' => $this->prestador->getAll()]);
+    }
+
+    public function me(int $prestadorId)
+    {
+        Response::json(['prestador' => $this->prestador->find($prestadorId)]);
+    }
+
     public function store(Request $request)
     {
         $validation = $request->rules([
