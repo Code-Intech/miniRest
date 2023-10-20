@@ -19,7 +19,7 @@ class User extends Model
         'CEP',
         'Rua',
         'Bairro',
-        'tb_end_idtb_end',
+        'tb_end_idtb_end',  
         'idgenero',
         'FlgStatus'
     ];
