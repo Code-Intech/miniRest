@@ -22,13 +22,18 @@ class PrestadorController extends Controller
     }
 
     public function index()
-    {
+    {   
         Response::json(['prestador' => $this->prestador->getAll()]);
     }
 
-    public function me(int $prestadorId)
+    public function findById(int $prestadorId)
     {
         Response::json(['prestador' => $this->prestador->find($prestadorId)]);
+    }
+
+    public function me(Request $request)
+    {
+        Response::json(['prestador' => $this->prestador->me(Auth::id($request))]);
     }
 
     public function store(Request $request)
