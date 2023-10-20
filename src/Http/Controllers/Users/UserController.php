@@ -60,7 +60,7 @@ class UserController extends Controller
         (new UserCreateAction())->execute($userDTO, $addressDTO);
 
         Response::json([
-            'message'=>'Usuário criado com sucesso',
+            'message'=>'Usuário criado com sucesso!',
         ], StatusCode::CREATED);
 
     }

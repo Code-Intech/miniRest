@@ -15,6 +15,19 @@ class PrestadorRepository
         $this->prestador = new Prestador();
     }
 
+    public function getAll(){
+        return $this->prestador
+            ->select('*')
+            ->get();
+    }
+
+    public function find(int $prestadorId)
+    {
+        return $this->prestador
+            ->where('idtb_prestador', '=', $prestadorId)
+            ->get();
+    }
+
     /**
      * @throws DatabaseInsertException
      */
