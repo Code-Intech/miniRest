@@ -5,6 +5,7 @@ namespace MiniRest\Repositories\Prestador;
 use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Models\Prestador\Prestador;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class PrestadorRepository
 {
@@ -15,17 +16,103 @@ class PrestadorRepository
         $this->prestador = new Prestador();
     }
 
-    public function getAll(){
-        return $this->prestador
-            ->select('*')
+    public function getAll()
+    {
+        $results = DB::table('tb_prestador')
+            ->select('tb_prestador.*')
+            ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
+            ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
+            ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
+            ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
+            ->groupBy('tb_prestador.idtb_prestador')
             ->get();
+        
+            $prestadoresWithSkills = $results->map(function($result){
+                $habilidadeIds = explode(',', $result->habilidades_id);
+                $habilidades = explode(',', $result->habilidades);
+                $skills = [];
+
+                foreach($habilidadeIds as $index => $habilidadeId){
+                    $skills[] = [
+                        'id' => $habilidadeId,
+                        'habilidade' => $habilidades[$index],
+                    ];
+                }
+
+                $result->skills = $skills;
+                unset($result->habilidades_id);
+                unset($result->habilidades);
+                return $result;
+            });
+
+            return $prestadoresWithSkills;
+
     }
 
-    public function find(int $prestadorId)
+    public function find(int|string $prestadorId)
     {
-        return $this->prestador
-            ->where('idtb_prestador', '=', $prestadorId)
+        $results = DB::table('tb_prestador')
+            ->select('tb_prestador.*')
+            ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
+            ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
+            ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
+            ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
+            ->groupBy('tb_prestador.idtb_prestador')
+            ->where('tb_prestador.idtb_prestador', '=', $prestadorId)
             ->get();
+
+        $prestadoresWithSkills = $results->map(function($result){
+            $habilidadeIds = explode(',', $result->habilidades_id);
+            $habilidades = explode(',', $result->habilidades);
+            $skills = [];
+
+            foreach($habilidadeIds as $index => $habilidadeId){
+                $skills[] = [
+                    'id' => $habilidadeId,
+                    'habilidade' => $habilidades[$index],
+                ];
+            }
+
+            $result->skills = $skills;
+            unset($result->habilidades_id);
+            unset($result->habilidades);
+            return $result;
+        });
+
+        return $prestadoresWithSkills;
+    }
+
+    public function me(int $userId)
+    {
+        $results = DB::table('tb_prestador')
+            ->select('tb_prestador.*')
+            ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
+            ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
+            ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
+            ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
+            ->groupBy('tb_prestador.idtb_prestador')
+            ->where('tb_prestador_tb_user_idtb_user', '=', $userId)
+            ->get();
+
+        $prestadoresWithSkills = $results->map(function($result){
+            $habilidadeIds = explode(',', $result->habilidades_id);
+            $habilidades = explode(',', $result->habilidades);
+            $skills = [];
+
+            foreach($habilidadeIds as $index => $habilidadeId){
+                $skills[] = [
+                    'id' => $habilidadeId,
+                    'habilidade' => $habilidades[$index],
+                ];
+            }
+
+            $result->skills = $skills;
+            unset($result->habilidades_id);
+            unset($result->habilidades);
+            return $result;
+        });
+
+        return $prestadoresWithSkills;
     }
 
     /**

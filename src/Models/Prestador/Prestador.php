@@ -15,4 +15,5 @@ class Prestador extends Model
         'CNPJ',
         'tb_user_idtb_user'
     ];
+
 }

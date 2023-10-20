@@ -54,4 +54,5 @@ Router::get('/skills', [SkillsController::class, 'index']);
 
 //Prestadores
 Router::get('/prestador', [PrestadorController::class, 'index']);
-Router::get('/prestador/{id}', [PrestadorController::class, 'me']);
+Router::get('/prestador/me', [PrestadorController::class, 'me']);
+Router::get('/prestador/{id}', [PrestadorController::class, 'findById']);
