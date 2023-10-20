@@ -12,6 +12,7 @@ use MiniRest\Http\Controllers\{Avatar\AvatarController,
     Gender\GenderController,
     HealthController,
     Users\UserController};
+use MiniRest\Http\Controllers\Contratante\ContratanteController;
 use MiniRest\Http\Controllers\Services\ServiceController;
 
 Router::post('/auth/login', [AuthController::class, 'login']);
@@ -34,11 +35,14 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
     // Prestador
     Router::post('/prestador/create', [PrestadorController::class, 'store']);
-
     Router::patch('/prestador/update', [PrestadorController::class, 'update']);
+
+    //Contratate
+    Router::post('/contratante/create', [ContratanteController::class, 'store']);
 
     // Serviço
     Router::post('/servico/create', [ServiceController::class, 'store']);
+
 
 });
 
