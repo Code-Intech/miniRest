@@ -20,9 +20,8 @@ class ServicoCreateAction
 
         DB::beginTransaction();
         try {
-            $servico = new Servico($data);
 
-            (new ServicoRepository(new Servico()))->storeServico($servico->toArray());
+            (new ServicoRepository(new Servico()))->storeServico($data);
 
             DB::commit();
 

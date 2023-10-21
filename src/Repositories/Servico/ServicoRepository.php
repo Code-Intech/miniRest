@@ -11,9 +11,9 @@ class ServicoRepository
 {
     protected $model;
 
-    public function __construct(Servico $model)
+    public function __construct()
     {
-        $this->model = $model;        
+        $this->model = new Servico();        
     }
 
     public function storeServico(array $data)

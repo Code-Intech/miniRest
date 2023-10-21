@@ -27,13 +27,20 @@ class ContratanteRepository
                 ]
             );
         
-        if($id->id == null)
-            throw new DatabaseInsertException(
-                'error ao fazer insert, contratante já foi cadastrado.',
-                StatusCode::SERVER_ERROR
-            );
+        if($id->idtb_contratante == null)
+        {
+            $id = $this->getContratanteIdByUserId($userId);
+        }
         
-        return $id->id;
+        return $id;
+    }
+
+    public function getContratanteIdByUserId(int $userId)
+    {
+        $contratante = $this->contratante->where('tb_user_idtb_user', $userId)->first();
+        if ($contratante) {
+            return $contratante->idtb_contratante;
+        }
     }
 }
 
