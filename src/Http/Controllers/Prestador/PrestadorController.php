@@ -53,10 +53,11 @@ class PrestadorController extends Controller
             return;
         }
         try {
-            (new PrestadorCreateAction())->execute(
+            $prestadorId = (new PrestadorCreateAction())->execute(
                 Auth::id($request),
                 new PrestadorCreateDTO($request)
             );
+            Response::json(['success' => ['message' => 'prestador cadastrado com sucesso','prestadorId' => $prestadorId]]);
         } catch (DatabaseInsertException $exception) {
             Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }

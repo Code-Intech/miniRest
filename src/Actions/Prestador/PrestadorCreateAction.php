@@ -37,6 +37,8 @@ class PrestadorCreateAction
             }
 
             DB::commit();
+            return $prestadorId;
+
         } catch (\Exception $exception) {
             DB::rollback();
             throw new DatabaseInsertException(
