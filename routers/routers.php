@@ -36,15 +36,13 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     // Prestador
     Router::post('/prestador/create', [PrestadorController::class, 'store']);
     Router::patch('/prestador/update', [PrestadorController::class, 'update']);
+    Router::get('/prestador/me', [PrestadorController::class, 'me']);
 
     //Contratate
     Router::post('/contratante/create', [ContratanteController::class, 'store']);
 
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
-
-    //
-
 
 });
 
@@ -60,5 +58,4 @@ Router::get('/skills', [SkillsController::class, 'index']);
 
 //Prestadores
 Router::get('/prestador', [PrestadorController::class, 'index']);
-Router::get('/prestador/me', [PrestadorController::class, 'me']);
 Router::get('/prestador/{id}', [PrestadorController::class, 'findById']);
