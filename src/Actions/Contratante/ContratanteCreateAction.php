@@ -22,9 +22,12 @@ class ContratanteCreateAction
 
     public function execute(int $userId)
     {
-        try{
-            return $this->contratanteRepository->storeContratante($userId);
+        DB::beginTransaction();
 
+        try{
+            $contratanteId = $this->contratanteRepository->storeContratante($userId);
+            DB::commit();
+            
         }catch(\Exception $exception){
             DB::rollback();
             throw new DatabaseInsertException(

@@ -1,12 +1,14 @@
 <?php
 
-namespace MiniRest\Models;
+namespace MiniRest\Models\Servico;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Servico extends Model
 {
     protected $table = 'tb_servico';
+    protected $primaryKey = 'idtb_servico';
+    
     protected $fillable = [
         'Data_Inicio',
         'Estimativa_de_distancia',
