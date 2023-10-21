@@ -44,7 +44,7 @@ class ServicoController extends Controller
 
         try {
             $servicoCreateAction = new ServicoCreateAction();
-            $servicoCreateAction->execute(new ServicoCreateDTO($request, $tb_contratante_idtb_contratante));
+            $servicoCreateAction->execute(new ServicoCreateDTO($request, $tb_contratante_idtb_contratante, $userId));
             return Response::json(['message' => 'Serviço criado com sucesso'], 201);
 
         } catch (DatabaseInsertException $exception) {

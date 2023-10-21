@@ -20,7 +20,7 @@ class ServicoCreateDTO implements DTO
     private $tb_contratante_tb_user_idtb_user;
     private $tb_end_idtb_end;
 
-    public function __construct(Request $request, $tb_contratante_idtb_contratante)
+    public function __construct(Request $request, $tb_contratante_idtb_contratante, $tb_contratante_tb_user_idtb_user)
     {
         $this->request = $request;
         $this->Data_Inicio = $request->json('Data_Inicio');
@@ -32,7 +32,7 @@ class ServicoCreateDTO implements DTO
         $this->Desc = $request->json('Desc');
         $this->Data_Cadastro_Servico = $request->json('Data_Cadastro_Servico');
         $this->tb_contratante_idtb_contratante = $tb_contratante_idtb_contratante;
-        $this->tb_contratante_tb_user_idtb_user = $request->json('tb_contratante_tb_user_idtb_user');
+        $this->tb_contratante_tb_user_idtb_user = $tb_contratante_tb_user_idtb_user;
         $this->tb_end_idtb_end = $request->json('tb_end_idtb_end');
         
     }

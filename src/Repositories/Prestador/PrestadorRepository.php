@@ -25,30 +25,30 @@ class PrestadorRepository
         $data = [];
 
         foreach ($prestadores as $prestador) {
-            $resultado1 = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+            $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
                 ->where('idtb_prestador', $prestador->idtb_prestador)
-                ->get();
+                ->first();
 
-            $resultado2 = PrestadorProfissao::select('Profissao', 'idtb_profissoes', 'Experiencia', 'Categoria', 'tb_categoria_idtb_categoria')
+            $prestadorProfissao = PrestadorProfissao::select('Profissao', 'idtb_profissoes', 'Experiencia', 'Categoria', 'tb_categoria_idtb_categoria')
                 ->join('tb_profissoes', 'tb_profissoes.idtb_profissoes', '=', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes')
                 ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
                 ->where('tb_prestador_profissao.tb_prestador_idtb_prestador', $prestador->idtb_prestador)
                 ->get();
 
-            $resultado3 = PrestadorHabilidades::select('Habilidade', 'idtb_habilidades')
+            $prestadorHabilidades = PrestadorHabilidades::select('Habilidade', 'idtb_habilidades')
                 ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades')
                 ->where('tb_prestador_habilidade.tb_prestador_idtb_prestador', $prestador->idtb_prestador)
                 ->get();
 
-            $resultado4 = PrestadorApresentacao::select('Apresentacao')
+            $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
                 ->where('tb_prestador_idtb_prestador', $prestador->idtb_prestador)
                 ->get();
 
             $data[] = [
-                $resultado1,
-                $resultado2,
-                $resultado3,
-                $resultado4,
+                $prestadorAll,
+                $prestadorProfissao,
+                $prestadorHabilidades,
+                $prestadorApresentacao,
             ];
         }
 
@@ -59,133 +59,71 @@ class PrestadorRepository
 
     public function find(int|string $prestadorId)
     {
-        $results = DB::table('tb_prestador')
-            ->select('tb_prestador.*', 'tb_apresentacao.Apresentacao as apresentacao')
-            ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
-            ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
-            ->selectRaw('GROUP_CONCAT(tb_profissoes.idtb_profissoes) as profissoes_id')
-            ->selectRaw('GROUP_CONCAT(tb_profissoes.Profissao) as profissoes')
-            ->selectRaw('GROUP_CONCAT(tb_profissoes.tb_categoria_idtb_categoria) as categorias_id')
-            ->selectRaw('GROUP_CONCAT(tb_categoria.Categoria) as categorias')
-            ->selectRaw('GROUP_CONCAT(tb_prestador_profissao.Experiencia) as experiencia')
-            ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
-            ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
-            ->join('tb_prestador_profissao', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_profissao.tb_prestador_idtb_prestador')
-            ->join('tb_profissoes', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes', '=', 'tb_profissoes.idtb_profissoes')
-            ->join('tb_categoria', 'tb_profissoes.tb_categoria_idtb_categoria', '=', 'tb_categoria.idtb_categoria')
-            ->join('tb_apresentacao', 'tb_prestador.idtb_prestador', '=', 'tb_apresentacao.tb_prestador_idtb_prestador')
-            ->groupBy('tb_prestador.idtb_prestador')
-            ->where('tb_prestador.idtb_prestador', '=', $prestadorId)
+        $data = [];
+
+        $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+            ->where('idtb_prestador', $prestadorId)
+            ->first();
+
+        $prestadorProfissao = PrestadorProfissao::select('Profissao', 'idtb_profissoes', 'Experiencia', 'Categoria', 'tb_categoria_idtb_categoria')
+            ->join('tb_profissoes', 'tb_profissoes.idtb_profissoes', '=', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes')
+            ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
+            ->where('tb_prestador_profissao.tb_prestador_idtb_prestador', $prestadorId)
             ->get();
 
-        $prestadoresWithSkills = $results->map(function($result){
-            $habilidadeIds = explode(',', $result->habilidades_id);
-            $habilidades = explode(',', $result->habilidades);
-            $profissoesIds = explode(',', $result->profissoes_id);
-            $profissoes = explode(',', $result->profissoes);
-            $categoriasIds = explode(',', $result->categorias_id);
-            $categorias = explode(',', $result->categorias);
-            $experiencia = explode(',', $result->experiencia);
-            $skills = [];
-            $professions = [];
+        $prestadorHabilidades = PrestadorHabilidades::select('Habilidade', 'idtb_habilidades')
+            ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades')
+            ->where('tb_prestador_habilidade.tb_prestador_idtb_prestador', $prestadorId)
+            ->get();
 
-            foreach($habilidadeIds as $index => $habilidadeId){
-                $skills[] = [
-                    'id' => $habilidadeId,
-                    'habilidade' => $habilidades[$index],
-                ];
-            }
+        $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
+            ->where('tb_prestador_idtb_prestador', $prestadorId)
+            ->get();
 
-            foreach ($profissoesIds as $index => $profissaoId) {
-                $professions[] = [
-                    'id' => $profissaoId,
-                    'Profissao' => $profissoes[$index],
-                    'categoria_id' => $categoriasIds[$index],
-                    'Categoria' => $categorias[$index],
-                    'experiencia' => $experiencia[$index],
-                ];
-            }
-
-            $result->skills = $skills;
-            $result->profissoes = $professions;
-
-            unset($result->habilidades_id);
-            unset($result->habilidades);
-            unset($result->profissoes_id);
-            unset($result->categorias_id);
-            unset($result->categorias);
-            unset($result->experiencia);
-
-            return $result;
-        });
-
-        return $prestadoresWithSkills;
+        $data[] = [
+            $prestadorAll,
+            $prestadorProfissao,
+            $prestadorHabilidades,
+            $prestadorApresentacao,
+        ];
+        
+        return [
+            $prestadorAll,
+            $prestadorProfissao,
+            $prestadorHabilidades,
+            $prestadorApresentacao,
+        ];
     }
 
     public function me(int $userId)
     {
-        $results = DB::table('tb_prestador')
-            ->select('tb_prestador.*', 'tb_apresentacao.Apresentacao as apresentacao')
-            ->selectRaw('GROUP_CONCAT(tb_habilidades.idtb_habilidades) as habilidades_id')
-            ->selectRaw('GROUP_CONCAT(tb_habilidades.Habilidade) as habilidades')
-            ->selectRaw('GROUP_CONCAT(tb_profissoes.idtb_profissoes) as profissoes_id')
-            ->selectRaw('GROUP_CONCAT(tb_profissoes.Profissao) as profissoes')
-            ->selectRaw('GROUP_CONCAT(tb_profissoes.tb_categoria_idtb_categoria) as categorias_id')
-            ->selectRaw('GROUP_CONCAT(tb_categoria.Categoria) as categorias')
-            ->selectRaw('GROUP_CONCAT(tb_prestador_profissao.Experiencia) as experiencia')
-            ->join('tb_prestador_habilidade', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_habilidade.tb_prestador_idtb_prestador')
-            ->join('tb_habilidades', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades', '=', 'tb_habilidades.idtb_habilidades')
-            ->join('tb_prestador_profissao', 'tb_prestador.idtb_prestador', '=', 'tb_prestador_profissao.tb_prestador_idtb_prestador')
-            ->join('tb_profissoes', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes', '=', 'tb_profissoes.idtb_profissoes')
-            ->join('tb_categoria', 'tb_profissoes.tb_categoria_idtb_categoria', '=', 'tb_categoria.idtb_categoria')
-            ->join('tb_apresentacao', 'tb_prestador.idtb_prestador', '=', 'tb_apresentacao.tb_prestador_idtb_prestador')
-            ->groupBy('tb_prestador.idtb_prestador')
-            ->where('tb_prestador_habilidade.tb_prestador_tb_user_idtb_user', '=', $userId)
+        $prestador = Prestador::where('tb_user_idtb_user', $userId)->firstOrFail();
+
+        $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+            ->where('idtb_prestador', $prestador->idtb_prestador)
+            ->first();
+
+        $prestadorProfissao = PrestadorProfissao::select('Profissao', 'idtb_profissoes', 'Experiencia', 'Categoria', 'tb_categoria_idtb_categoria')
+            ->join('tb_profissoes', 'tb_profissoes.idtb_profissoes', '=', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes')
+            ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
+            ->where('tb_prestador_profissao.tb_prestador_idtb_prestador', $prestador->idtb_prestador)
             ->get();
 
-        $prestadoresWithSkills = $results->map(function($result){
-            $habilidadeIds = explode(',', $result->habilidades_id);
-            $habilidades = explode(',', $result->habilidades);
-            $profissoesIds = explode(',', $result->profissoes_id);
-            $profissoes = explode(',', $result->profissoes);
-            $categoriasIds = explode(',', $result->categorias_id);
-            $categorias = explode(',', $result->categorias);
-            $experiencia = explode(',', $result->experiencia);
-            $skills = [];
-            $professions = [];
+        $prestadorHabilidades = PrestadorHabilidades::select('Habilidade', 'idtb_habilidades')
+            ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades')
+            ->where('tb_prestador_habilidade.tb_prestador_idtb_prestador', $prestador->idtb_prestador)
+            ->get();
 
-            foreach($habilidadeIds as $index => $habilidadeId){
-                $skills[] = [
-                    'id' => $habilidadeId,
-                    'habilidade' => $habilidades[$index],
-                ];
-            }
+        $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
+            ->where('tb_prestador_idtb_prestador', $prestador->idtb_prestador)
+            ->get();
 
-            foreach ($profissoesIds as $index => $profissaoId) {
-                $professions[] = [
-                    'id' => $profissaoId,
-                    'Profissao' => $profissoes[$index],
-                    'categoria_id' => $categoriasIds[$index],
-                    'Categoria' => $categorias[$index],
-                    'experiencia' => $experiencia[$index],
-
-                ];
-            }
-
-            $result->skills = $skills;
-            $result->profissoes = $professions;
-
-            unset($result->habilidades_id);
-            unset($result->habilidades);
-            unset($result->profissoes_id);
-            unset($result->categorias_id);
-            unset($result->categorias);
-            unset($result->experiencia);
-
-            return $result;
-        });
-
-        return $prestadoresWithSkills;
+        return [
+            $prestadorAll,
+            $prestadorProfissao,
+            $prestadorHabilidades,
+            $prestadorApresentacao,
+        ];
     }
 
     /**
