@@ -45,10 +45,10 @@ class PrestadorRepository
                 ->get();
 
             $data[] = [
-                $prestadorAll,
-                $prestadorProfissao,
-                $prestadorHabilidades,
-                $prestadorApresentacao,
+                'prestadorInfo' => $prestadorAll,
+                'prestadorProfessions' => $prestadorProfissao,
+                'prestadorSkills' => $prestadorHabilidades,
+                'prestadorGrettings' => $prestadorApresentacao,
             ];
         }
 
@@ -79,19 +79,12 @@ class PrestadorRepository
         $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
             ->where('tb_prestador_idtb_prestador', $prestadorId)
             ->get();
-
-        $data[] = [
-            $prestadorAll,
-            $prestadorProfissao,
-            $prestadorHabilidades,
-            $prestadorApresentacao,
-        ];
         
         return [
-            $prestadorAll,
-            $prestadorProfissao,
-            $prestadorHabilidades,
-            $prestadorApresentacao,
+            'prestadorInfo' => $prestadorAll,
+            'prestadorProfessions' => $prestadorProfissao,
+            'prestadorSkills' => $prestadorHabilidades,
+            'prestadorGrettings' => $prestadorApresentacao,
         ];
     }
 
@@ -119,10 +112,10 @@ class PrestadorRepository
             ->get();
 
         return [
-            $prestadorAll,
-            $prestadorProfissao,
-            $prestadorHabilidades,
-            $prestadorApresentacao,
+            'prestadorInfo' => $prestadorAll,
+            'prestadorProfessions' => $prestadorProfissao,
+            'prestadorSkills' => $prestadorHabilidades,
+            'prestadorGrettings' => $prestadorApresentacao,
         ];
     }
 
