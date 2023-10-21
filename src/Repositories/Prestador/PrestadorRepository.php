@@ -6,6 +6,9 @@ use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Models\Prestador\Prestador;
 use Illuminate\Database\Capsule\Manager as DB;
+use MiniRest\Models\Prestador\PrestadorApresentacao;
+use MiniRest\Models\Prestador\PrestadorHabilidades;
+use MiniRest\Models\Prestador\PrestadorProfissao;
 
 class PrestadorRepository
 {
@@ -18,84 +21,40 @@ class PrestadorRepository
 
     public function getAll()
     {
-        $prestadoresWithSkills = DB::table('tb_prestador as p')
-        ->select(
-            'p.idtb_prestador',
-            'p.Valor_Da_Hora',
-            'p.Valor_diaria',
-            'p.Nome_Empresa',
-            'p.CNPJ',
-            'p.tb_user_idtb_user',
-            'p.FlgStatus',
-            'a.Apresentacao',
-            DB::raw('GROUP_CONCAT(DISTINCT pr.idtb_profissoes, "-", pr.Profissao) as profissoes'),
-            DB::raw('categorias.categorias as categorias'), 
-            DB::raw('GROUP_CONCAT(DISTINCT h.idtb_habilidades, "-", h.Habilidade) as habilidades'),
-            DB::raw('GROUP_CONCAT(DISTINCT ph.tb_habilidades_idtb_habilidades) as habilidades_id')
-        )
-        ->join('tb_apresentacao as a', 'p.idtb_prestador', '=', 'a.tb_prestador_idtb_prestador')
-        ->join('tb_prestador_profissao as pp', 'p.idtb_prestador', '=', 'pp.tb_prestador_idtb_prestador')
-        ->join('tb_profissoes as pr', 'pp.tb_profissoes_idtb_profissoes', '=', 'pr.idtb_profissoes')
-        ->join('tb_prestador_habilidade as ph', 'p.idtb_prestador', '=', 'ph.tb_prestador_idtb_prestador')
-        ->join('tb_habilidades as h', 'ph.tb_habilidades_idtb_habilidades', '=', 'h.idtb_habilidades')
-        ->leftJoin(DB::raw('(
-            SELECT pp.tb_prestador_idtb_prestador, GROUP_CONCAT(DISTINCT c.idtb_categoria) as categorias
-            FROM tb_prestador_profissao as pp
-            INNER JOIN tb_profissoes as pr ON pp.tb_profissoes_idtb_profissoes = pr.idtb_profissoes
-            LEFT JOIN tb_categoria as c ON pr.tb_categoria_idtb_categoria = c.idtb_categoria
-            GROUP BY pp.tb_prestador_idtb_prestador
-        ) as categorias'), 'p.idtb_prestador', '=', 'categorias.tb_prestador_idtb_prestador')
-        ->groupBy('p.idtb_prestador')
-        ->get();
+        $prestadores = Prestador::all();
+        $data = [];
 
-    $prestadoresWithSkills = $prestadoresWithSkills->map(function ($result) {
-        $profissoes = explode(',', $result->profissoes);
-        $categorias = explode(',', $result->categorias);
-        $habilidades = explode(',', $result->habilidades);
+        foreach ($prestadores as $prestador) {
+            $resultado1 = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+                ->where('idtb_prestador', $prestador->idtb_prestador)
+                ->get();
 
-        $profissoesArray = [];
-        foreach ($profissoes as $profissao) {
-            list($id, $nome) = explode('-', $profissao);
-            $profissoesArray[] = ['idtb_profissoes' => $id, 'Profissao' => $nome];
+            $resultado2 = PrestadorProfissao::select('Profissao', 'idtb_profissoes', 'Experiencia', 'Categoria', 'tb_categoria_idtb_categoria')
+                ->join('tb_profissoes', 'tb_profissoes.idtb_profissoes', '=', 'tb_prestador_profissao.tb_profissoes_idtb_profissoes')
+                ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
+                ->where('tb_prestador_profissao.tb_prestador_idtb_prestador', $prestador->idtb_prestador)
+                ->get();
+
+            $resultado3 = PrestadorHabilidades::select('Habilidade', 'idtb_habilidades')
+                ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_prestador_habilidade.tb_habilidades_idtb_habilidades')
+                ->where('tb_prestador_habilidade.tb_prestador_idtb_prestador', $prestador->idtb_prestador)
+                ->get();
+
+            $resultado4 = PrestadorApresentacao::select('Apresentacao')
+                ->where('tb_prestador_idtb_prestador', $prestador->idtb_prestador)
+                ->get();
+
+            $data[] = [
+                $resultado1,
+                $resultado2,
+                $resultado3,
+                $resultado4,
+            ];
         }
 
-        $categoriasArray = [];
-        foreach ($categorias as $categoria) {
-            if (!empty($categoria)) {
-                $categoriasArray[] = ['idtb_categoria' => $categoria];
-            }
-        }
-
-        $habilidadesArray = [];
-        foreach ($habilidades as $habilidade) {
-            list($id, $nome) = explode('-', $habilidade);
-            $habilidadesArray[] = ['id' => $id, 'habilidade' => $nome];
-        }
-
-        return [
-            'idtb_prestador' => $result->idtb_prestador,
-            'Valor_Da_Hora' => $result->Valor_Da_Hora,
-            'Valor_diaria' => $result->Valor_diaria,
-            'Nome_Empresa' => $result->Nome_Empresa,
-            'CNPJ' => $result->CNPJ,
-            'tb_user_idtb_user' => $result->tb_user_idtb_user,
-            'FlgStatus' => $result->FlgStatus,
-            'Apresentacao' => $result->Apresentacao,
-            'profissoes' => $profissoesArray,
-            'categorias' => $categoriasArray,
-            'habilidades' => $habilidadesArray,
-        ];
-    });
-
-    return $prestadoresWithSkills;
 
 
-
-
-
-
-               
-        
+        return $data;
     }
 
     public function find(int|string $prestadorId)
