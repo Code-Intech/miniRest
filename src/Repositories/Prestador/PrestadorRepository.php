@@ -42,7 +42,7 @@ class PrestadorRepository
 
             $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
                 ->where('tb_prestador_idtb_prestador', $prestador->idtb_prestador)
-                ->get();
+                ->first();
 
             $data[] = [
                 'prestadorInfo' => $prestadorAll,
@@ -78,7 +78,7 @@ class PrestadorRepository
 
         $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
             ->where('tb_prestador_idtb_prestador', $prestadorId)
-            ->get();
+            ->first();
         
         return [
             'prestadorInfo' => $prestadorAll,
@@ -109,7 +109,7 @@ class PrestadorRepository
 
         $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
             ->where('tb_prestador_idtb_prestador', $prestador->idtb_prestador)
-            ->get();
+            ->first();
 
         return [
             'prestadorInfo' => $prestadorAll,
