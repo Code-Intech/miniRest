@@ -11,6 +11,8 @@ use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 use MiniRest\Repositories\Prestador\PrestadorRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use MiniRest\Helpers\StatusCode\StatusCode;
 
 class PrestadorController extends Controller
 {
@@ -33,7 +35,11 @@ class PrestadorController extends Controller
 
     public function me(Request $request)
     {
-        Response::json(['prestador' => $this->prestador->me(Auth::id($request))]);
+        try {
+            Response::json(['prestador' => $this->prestador->me(Auth::id($request))]);
+        } catch (ModelNotFoundException $exception) {
+            Response::json(['error' => 'Usuário não cadastrado como prestador', $exception->getMessage()], StatusCode::SERVER_ERROR);
+        }
     }
 
     public function store(Request $request)
