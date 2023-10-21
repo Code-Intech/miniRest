@@ -93,5 +93,7 @@ class PrestadorController extends Controller
             new PrestadorCreateDTO($request)
         );
 
+        Response::json(['success' => ['message' => 'prestador atualizado com sucesso']]);
+
     }
 }
