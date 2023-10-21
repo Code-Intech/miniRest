@@ -43,6 +43,8 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
 
+    //
+
 
 });
 
