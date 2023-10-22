@@ -56,7 +56,7 @@ class ServicoCreateDTO implements DTO
             'tb_contratante_tb_user_idtb_user' => $this->tb_contratante_tb_user_idtb_user,
             'tb_end_idtb_end' => $this->tb_end_idtb_end,
             'profissoes' => $this->profissoes,
-            'habilidades' => $this->habilidades,
+            'habilidades'=> $this->habilidades,
         ];
     }
 }
