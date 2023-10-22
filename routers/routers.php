@@ -44,6 +44,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
     Router::patch('/servico/update/{id}', [ServicoController::class, 'update']);
+    Router::get('/servico/me', [ServicoController::class, 'me']);
 
 
 });
@@ -64,3 +65,4 @@ Router::get('/prestador/{id}', [PrestadorController::class, 'findById']);
 
 //Serviços
 Router::get('/servico', [ServicoController::class, 'index']);
+Router::get('/servico/{id}', [ServicoController::class, 'findById']);

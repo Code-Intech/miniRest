@@ -7,6 +7,7 @@ use MiniRest\Actions\Servico\ServicoUpdateAction;
 use MiniRest\DTO\AddressCreateDTO;
 use MiniRest\DTO\Servico\ServicoCreateDTO;
 use MiniRest\Exceptions\DatabaseInsertException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
@@ -28,6 +29,20 @@ class ServicoController extends Controller
     public function index()
     {
         Response::json(['servico' => $this->servico->getAll()]);
+    }
+
+    public function findById(int $servicoId)
+    {
+        Response::json(['servico' => $this->servico->find($servicoId)]);
+    }
+
+    public function me(Request $request)
+    {
+        try {
+            Response::json(['servico' => $this->servico->me(Auth::id($request))]);
+        } catch (ModelNotFoundException $exception) {
+            
+        }
     }
 
     public function store(Request $request)
