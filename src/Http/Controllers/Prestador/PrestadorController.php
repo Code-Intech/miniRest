@@ -38,7 +38,7 @@ class PrestadorController extends Controller
         try {
             Response::json(['prestador' => $this->prestador->me(Auth::id($request))]);
         } catch (ModelNotFoundException $exception) {
-            Response::json(['error' => 'Usuário não cadastrado como prestador', $exception->getMessage()], StatusCode::SERVER_ERROR);
+            // Response::json(['error' => 'Usuário não cadastrado como prestador', $exception->getMessage()], StatusCode::SERVER_ERROR);
         }
     }
 
