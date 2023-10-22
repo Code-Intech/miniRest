@@ -8,7 +8,6 @@ use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Repositories\Servico\ServicoRepository;
 use MiniRest\Models\Servico\Servico;
 use Illuminate\Database\Capsule\Manager as DB;
-use MiniRest\Models\Servico\ServicoProfissao;
 use MiniRest\Repositories\Servico\ServicoHabilidadeRepository;
 use MiniRest\Repositories\Servico\ServicoProfissaoRepository;
 
