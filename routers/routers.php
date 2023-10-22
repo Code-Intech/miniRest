@@ -1,5 +1,6 @@
 <?php
 
+use MiniRest\Actions\Servico\ServicoUploadImageAction;
 use MiniRest\Http\Middlewares\AuthMiddleware;
 use MiniRest\Router\Router;
 
@@ -15,6 +16,7 @@ use MiniRest\Http\Controllers\{Avatar\AvatarController,
     Users\UserController};
 use MiniRest\Http\Controllers\Contratante\ContratanteController;
 use MiniRest\Http\Controllers\Servico\ServicoController;
+use MiniRest\Http\Controllers\Servico\ServicoImgController;
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
@@ -47,6 +49,9 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/servico/update/{id}', [ServicoController::class, 'update']);
     Router::get('/servico/me', [ServicoController::class, 'me']);
 
+    // Serviço Image upload
+    Router::post('/servico/upload/image/{id}', [ServicoImgController::class, 'uploadImage']);
+
     // Portifólio
     Router::post('/portifolio/create', [PortilioController::class, 'store']);
     Router::post('/portifolio/update/{id}', [PortilioController::class, 'update']);
@@ -58,7 +63,6 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::get('/portifolio', [PortilioController::class, 'getUserPortifolios']);
     Router::get('/portifolio/{id}', [PortilioController::class, 'getPortifoliosByUserId']);
     Router::get('/album/{id}', [PortilioController::class, 'getPortifolioAlbumById']);
-
 
 
 });

@@ -192,6 +192,14 @@ class ServicoRepository
             ]
         );
     }
+
+    public function getServicoIdByUserId(int $userId)
+    {
+        $servico = $this->model->where('tb_contratante_tb_user_idtb_user', $userId)->first();
+        if ($servico) {
+            return $servico->idtb_servico;
+        }
+    }
 }
 
 ?>
