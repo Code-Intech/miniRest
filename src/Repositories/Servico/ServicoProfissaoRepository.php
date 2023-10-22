@@ -3,7 +3,6 @@
 namespace MiniRest\Repositories\Servico;
 
 use MiniRest\Exceptions\DatabaseInsertException;
-use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Models\Servico\ServicoProfissao;
 
 class ServicoProfissaoRepository

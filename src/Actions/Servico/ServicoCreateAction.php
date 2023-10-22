@@ -9,6 +9,7 @@ use MiniRest\Repositories\Servico\ServicoRepository;
 use MiniRest\Models\Servico\Servico;
 use Illuminate\Database\Capsule\Manager as DB;
 use MiniRest\Models\Servico\ServicoProfissao;
+use MiniRest\Repositories\Servico\ServicoHabilidadeRepository;
 use MiniRest\Repositories\Servico\ServicoProfissaoRepository;
 
 class ServicoCreateAction
@@ -28,6 +29,7 @@ class ServicoCreateAction
             $servicoId = $servico->idtb_servico;
 
             $profissoes = $data['profissoes'];
+            $habilidades = $data['habilidades'];
 
             if(!empty($profissoes)){
                 $servicoProfissaoRepository = new ServicoProfissaoRepository();
@@ -36,6 +38,16 @@ class ServicoCreateAction
             
                 foreach ($profissoes as $profissaoId) {
                     $servicoProfissaoRepository->storeServicoProfissao($servicoId, $profissaoId, $userId, $contratanteId);
+                }
+            }
+
+            if(!empty($habilidades)){
+                $servicoHabilidadeRepository = new ServicoHabilidadeRepository();
+                $userId = $data['tb_contratante_tb_user_idtb_user'];
+                $contratanteId = $data['tb_contratante_idtb_contratante'];
+
+                foreach($habilidades as $habilidadeId){
+                    $servicoHabilidadeRepository->storeServicoHabilidade($servicoId, $contratanteId, $userId, $habilidadeId);
                 }
             }
             
@@ -51,13 +63,4 @@ class ServicoCreateAction
         }
     }
 
-    private function associateProfissoes(int $servicoId, array $profissoes)
-    {
-        foreach($profissoes as $profissaoId){
-            ServicoProfissao::create([
-                'tb_servico_idtb_servico' => $servicoId,
-                'tb_proifissoes_idtb_profissoes' => $profissaoId,
-            ]);
-        }
-    }
 }
