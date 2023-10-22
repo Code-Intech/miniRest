@@ -20,7 +20,8 @@ class ServicoRepository
     {
         try{
             return DB::transaction(function() use($data){
-                return $this->model->create($data);
+                $servico = $this->model->create($data);
+                return $servico;
             });
         } catch(\Exception $e){
             throw new DatabaseInsertException("Erro ao criar serviço.", StatusCode::SERVER_ERROR, $e);
