@@ -119,6 +119,13 @@ class PrestadorRepository
         ];
     }
 
+    public function getPrestadorId(int $userId)
+    {
+        $prestador = Prestador::where('tb_user_idtb_user', $userId)->firstOrFail();
+        return $prestador->idtb_prestador;
+
+    }
+
     /**
      * @throws DatabaseInsertException
      */

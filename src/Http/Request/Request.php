@@ -16,12 +16,6 @@ class Request extends RequestValidator
         return $default;
     }
 
-    /**
-     * @deprecated
-     * @param $key
-     * @param $default
-     * @return mixed|null
-     */
     public function post($key, $default = null) {
         if (isset($_POST[$key])) {
             return $_POST[$key];

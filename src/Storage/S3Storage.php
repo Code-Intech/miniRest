@@ -12,7 +12,7 @@ use MiniRest\Storage\Acl\AclInterface;
 use MiniRest\Storage\Acl\PrivateAcl;
 use Ramsey\Uuid\Uuid;
 
-class S3Storage
+class S3Storage extends Storage
 {
     private string $awsAccessKeyId;
     private string $awsSecretAccessKey;
