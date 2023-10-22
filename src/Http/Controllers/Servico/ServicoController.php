@@ -14,12 +14,26 @@ use MiniRest\Http\Auth\Auth;
 use MiniRest\Repositories\AddressRepository;
 use MiniRest\Repositories\ContratanteRepository;
 use Illuminate\Database\Capsule\Manager as DB;
+use MiniRest\Repositories\Servico\ServicoRepository;
 
 class ServicoController extends Controller
 {
+    private ServicoRepository $servico;
+
+    public function __construct()
+    {
+        $this->servico = new ServicoRepository();
+    }
+
+    public function index()
+    {
+        Response::json(['servico' => $this->servico->getAll()]);
+    }
+
     public function store(Request $request)
     {
         $validation = $request->rules([
+            'Titulo_Servico' => 'required',
             'Data_Inicio' => 'required',
             'Estimativa_de_distancia' => 'required',
             'Estimativa_Valor' => 'required',
