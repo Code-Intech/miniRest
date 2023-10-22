@@ -6,6 +6,7 @@ use MiniRest\Router\Router;
 use MiniRest\Http\Controllers\{Avatar\AvatarController,
     AuthController,
     Categories\CategoriesController,
+    Portifolio\PortilioController,
     Prestador\PrestadorController,
     Professions\ProfessionsController,
     Skills\SkillsController,
@@ -43,6 +44,19 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
+
+    // Portifólio
+    Router::post('/portifolio/create', [PortilioController::class, 'store']);
+    Router::post('/portifolio/update/{id}', [PortilioController::class, 'update']);
+    Router::post('/portifolio/add/{id}', [PortilioController::class, 'putPhoto']);
+
+    Router::delete('/album/remove/{id}', [PortilioController::class, 'deleteAlbumPhotoById']);
+    Router::delete('/portifolio/album/{id}', [PortilioController::class, 'deleteAlbumById']);
+
+    Router::get('/portifolio', [PortilioController::class, 'getUserPortifolios']);
+    Router::get('/portifolio/{id}', [PortilioController::class, 'getPortifoliosByUserId']);
+    Router::get('/album/{id}', [PortilioController::class, 'getPortifolioAlbumById']);
+
 
 
 });
