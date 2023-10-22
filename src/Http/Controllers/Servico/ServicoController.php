@@ -13,6 +13,7 @@ use MiniRest\Http\Auth\Auth;
 use MiniRest\Models\Address;
 use MiniRest\Repositories\AddressRepository;
 use MiniRest\Repositories\ContratanteRepository;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class ServicoController extends Controller
 {
@@ -26,6 +27,7 @@ class ServicoController extends Controller
             'Remoto_Presencial' => 'required',
             'Estimativa_de_Termino' => 'required',
             'Desc' => 'required',
+            'profissoes' => 'array',
         ])->validate();
 
         if (!$validation) {
@@ -49,12 +51,16 @@ class ServicoController extends Controller
 
         $tb_contratante_idtb_contratante = $contratanteId;
 
+        $profissoes = $request->json('profissoes');
+
         try {
             $servicoCreateAction = new ServicoCreateAction();
-            $servicoCreateAction->execute(new ServicoCreateDTO($request, $tb_contratante_idtb_contratante, $userId, $enderecoId));
+            $servicoCreateAction->execute(new ServicoCreateDTO($request, $tb_contratante_idtb_contratante, $userId, $enderecoId, $profissoes));
+
             return Response::json(['message' => 'Serviço criado com sucesso'], 201);
 
         } catch (DatabaseInsertException $exception) {
+            DB::rollback();
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
     }
