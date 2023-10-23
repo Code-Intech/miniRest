@@ -61,7 +61,6 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::delete('/portifolio/album/{id}', [PortilioController::class, 'deleteAlbumById']);
 
     Router::get('/portifolio', [PortilioController::class, 'getUserPortifolios']);
-    Router::get('/portifolio/{id}', [PortilioController::class, 'getPortifoliosByUserId']);
     Router::get('/album/{id}', [PortilioController::class, 'getPortifolioAlbumById']);
 
 
@@ -84,3 +83,7 @@ Router::get('/prestador/{id}', [PrestadorController::class, 'findById']);
 //Serviços
 Router::get('/servico', [ServicoController::class, 'index']);
 Router::get('/servico/{id}', [ServicoController::class, 'findById']);
+
+// Portifólio
+Router::get('/portifolio/{id}', [PortilioController::class, 'getPortifoliosByUserId']);
+
