@@ -115,7 +115,7 @@ class PrestadorRepository
             'prestadorInfo' => $prestadorAll,
             'prestadorProfessions' => $prestadorProfissao,
             'prestadorSkills' => $prestadorHabilidades,
-            'prestadorGrettings' => $prestadorApresentacao,
+            'apresentacao' => $prestadorApresentacao['Apresentacao'],
         ];
     }
 
