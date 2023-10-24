@@ -21,6 +21,7 @@ class ServicoCreateDTO implements DTO
     private $tb_end_idtb_end;
     private $profissoes;
     private $habilidades;
+    private $images;
 
     public function __construct(Request $request, $tb_contratante_idtb_contratante, $tb_contratante_tb_user_idtb_user, $enderecoId, $profissoes, $habilidades)
     {
@@ -38,6 +39,7 @@ class ServicoCreateDTO implements DTO
         $this->tb_end_idtb_end = $enderecoId;
         $this->profissoes = $profissoes;
         $this->habilidades = $habilidades;
+        $this->images = $this->request->files('images');
         
     }
 
@@ -57,6 +59,7 @@ class ServicoCreateDTO implements DTO
             'tb_end_idtb_end' => $this->tb_end_idtb_end,
             'profissoes' => $this->profissoes,
             'habilidades'=> $this->habilidades,
+            'images' => $this->images,
         ];
     }
 }

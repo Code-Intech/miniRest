@@ -15,15 +15,21 @@ use MiniRest\Http\Auth\Auth;
 use MiniRest\Repositories\AddressRepository;
 use MiniRest\Repositories\ContratanteRepository;
 use Illuminate\Database\Capsule\Manager as DB;
+use MiniRest\Actions\Servico\ServicoUploadImageAction;
+use MiniRest\DTO\Servico\ServicoUploadImageDTO;
 use MiniRest\Repositories\Servico\ServicoRepository;
 
 class ServicoController extends Controller
 {
     private ServicoRepository $servico;
+    private ContratanteRepository $contratante;
+    private AddressRepository $addressRepository;
 
     public function __construct()
     {
         $this->servico = new ServicoRepository();
+        $this->contratante = new ContratanteRepository();
+        $this->addressRepository = new AddressRepository();
     }
 
     public function index()
@@ -66,18 +72,15 @@ class ServicoController extends Controller
         }
 
         $userId = Auth::id($request);
-        $contratanteRepository = new ContratanteRepository();
-
-        $contratanteId = $contratanteRepository->getContratanteIdByUserId($userId);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
 
         if(!$contratanteId)
         {
-            $contratanteId = $contratanteRepository->storeContratante($userId);
+            $contratanteId = $this->contratante->storeContratante($userId);
         }
 
-        $enderecoRepository = new AddressRepository();
         $enderecoDTO = new AddressCreateDTO($request);
-        $enderecoId = $enderecoRepository->store($enderecoDTO->toArray());
+        $enderecoId = $this->addressRepository->store($enderecoDTO->toArray());
 
         $tb_contratante_idtb_contratante = $contratanteId;
 
@@ -94,6 +97,35 @@ class ServicoController extends Controller
             DB::rollback();
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
+    }
+
+    public function uploadImage(Request $request, $servicoId)
+    {
+        $validation = $request->rules([
+            'image' => 'required|file:jpg,jpeg,png,gif',
+        ])->validate('files');
+
+        if(!$validation){
+            $request->errors();
+            return;
+        }
+
+        $userId = Auth::id($request);   
+        $servicoId = $this->servico->getServicoId($servicoId);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+
+
+        try{
+            $servicoUploadImageAction = new ServicoUploadImageAction();
+            $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
+
+            return Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
+        }
+        catch(DatabaseInsertException $exception){
+            DB::rollback();
+            return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
+        }
+
     }
 
     public function update(Request $request, int $servicoId)
@@ -120,15 +152,14 @@ class ServicoController extends Controller
         $enderecoRepository = new AddressRepository();
         $enderecoDTO = new AddressCreateDTO($request);
         $enderecoId = $enderecoRepository->store($enderecoDTO->toArray());
-        
-        $contratanteRepository = new ContratanteRepository();
 
 
-        $contratanteId = $contratanteRepository->getContratanteIdByUserId($userId);
+
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
 
         if(!$contratanteId)
         {
-            $contratanteId = $contratanteRepository->storeContratante($userId);
+            $contratanteId = $this->contratante->storeContratante($userId);
         }
 
         $tb_contratante_idtb_contratante = $contratanteId;

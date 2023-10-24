@@ -46,6 +46,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
+    Router::post('/servico/img/{id}', [ServicoController::class, 'uploadImage']);
     Router::patch('/servico/update/{id}', [ServicoController::class, 'update']);
     Router::get('/servico/me', [ServicoController::class, 'me']);
 
