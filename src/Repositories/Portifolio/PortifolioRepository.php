@@ -142,11 +142,16 @@ class PortifolioRepository
         $data = [];
 
         foreach ($portifolios as $portifolio) {
+
             $portifolioPhotos = $this->portifolioImage->where('tb_portifolio_idtb_portifolio', $portifolio->idtb_portifolio)
                 ->get(['idtb_img_video', 'Img']);
 
             $portifolioPhotos->each(function ($item) use ($base_url) {
                 $item->Img = $base_url . '/' . $item->Img;
+            });
+
+            $portifolios->each(function ($item) use ($base_url) {
+                $item->Capa = $base_url . '/' . $item->Capa;
             });
 
             $data[] = [
