@@ -29,7 +29,7 @@ class DeleteAlbumPortifolioUploadAction
         try {
             $portifolioRepository->deleteAlbum($albumId, $prestadorId, $userId);
         } catch (PortifolioPrestadorNotFoundException|ModelNotFoundException $e) {
-            throw new PortifolioPrestadorNotFoundException();
+            throw new PortifolioPrestadorNotFoundException('O portifólio não existe.');
         }
 
     }
