@@ -4,6 +4,7 @@ namespace MiniRest\Http\Request\Rules;
 
 use MiniRest\Http\Request\RequestValidation\ValidationRule;
 use MiniRest\Storage\DiskStorage;
+use MiniRest\Storage\Storage;
 
 class MultipleFilesRule implements ValidationRule
 {
@@ -14,7 +15,7 @@ class MultipleFilesRule implements ValidationRule
             return false;
         }
 
-        foreach ((new DiskStorage(''))->reArrayFiles($value) as $file) {
+        foreach ((new Storage())->reArrayFiles($value) as $file) {
             if (!$this->isValidFile($file, $params)) {
                 return false;
             }
