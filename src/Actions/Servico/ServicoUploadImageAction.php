@@ -16,30 +16,33 @@ class ServicoUploadImageAction
      * @throws DatabaseInsertException
      */
     public function execute(ServicoUploadImageDTO $servicoUploadImageDTO)
-    {
+    {   
         $data = $servicoUploadImageDTO->toArray();
         $servicoRepository = new ServicoRepository();
-        
-        try{
-            $image = UUIDFileName::uuidFileName($data['IMG']['name']);
-            $upload = new S3Storage(new PublicAcl());
+        $upload = new S3Storage(new PublicAcl());
 
-            $servicoRepository->storeImages(
-                $image, 
-                $data['tb_servico_idtb_servico'], 
-                $data['tb_servico_tb_contratante_idtb_contratante'],
-                $data['tb_servico_tb_contratante_tb_user_idtb_user'],
-            );
+        foreach($upload->reArrayFiles($data['IMG']) as $images){
+            try{
+                $image = UUIDFileName::uuidFileName($images['name']);
             
-            $upload->upload(
-                'servico/' . $image,
-                $servicoUploadImageDTO->toArray()['IMG']['tmp_name']
-            );
-
+                $servicoRepository->storeImages(
+                    $image, 
+                    $data['tb_servico_idtb_servico'], 
+                    $data['tb_servico_tb_contratante_idtb_contratante'],
+                    $data['tb_servico_tb_contratante_tb_user_idtb_user'],
+                );
+                
+                $upload->upload(
+                    'servico/' . $image,
+                    $images['tmp_name']
+                );
+    
+            }
+            catch(\PDOException $e){
+                throw new UploadErrorException($e->getMessage());
+            }
         }
-        catch(\PDOException $e){
-            throw new UploadErrorException($e->getMessage());
-        }
+        
     }
     
 

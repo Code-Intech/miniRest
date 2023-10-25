@@ -102,8 +102,9 @@ class ServicoController extends Controller
     public function uploadImage(Request $request, $servicoId)
     {
         $validation = $request->rules([
-            'image' => 'required|file:jpg,jpeg,png,gif',
+            'image' => 'required|multipleFiles:jpg,jpeg,png,gif',
         ])->validate('files');
+
 
         if(!$validation){
             $request->errors();
@@ -127,6 +128,7 @@ class ServicoController extends Controller
         }
 
     }
+
 
     public function update(Request $request, int $servicoId)
     {
