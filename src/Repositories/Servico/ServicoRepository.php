@@ -3,17 +3,21 @@
 namespace MiniRest\Repositories\Servico;
 
 use MiniRest\Models\Servico\Servico;
+use MiniRest\Models\Servico\ServicoUploadImage;
 use MiniRest\Exceptions\DatabaseInsertException;
+use MiniRest\Exceptions\ServiceNotFoundedException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class ServicoRepository
 {
-    protected $model;
+    private $model;
+    private $imagesModel;
 
     public function __construct()
     {
-        $this->model = new Servico();        
+        $this->model = new Servico();  
+        $this->imagesModel = new ServicoUploadImage();
     }
 
     public function getAll()
@@ -193,11 +197,24 @@ class ServicoRepository
         );
     }
 
-    public function getServicoIdByUserId(int $userId)
+    public function storeImages(string $itenFileName, int $servicoId, int $contratanteId, int $userId)
     {
-        $servico = $this->model->where('tb_contratante_tb_user_idtb_user', $userId)->first();
+        return $this->imagesModel->create([
+            'IMG' => $itenFileName,
+            "tb_servico_idtb_servico" => $servicoId,
+            "tb_servico_tb_contratante_idtb_contratante" => $contratanteId,
+            "tb_servico_tb_contratante_tb_user_idtb_user"=> $userId,
+        ]);
+    }
+
+    public function getServicoId(int $servicoId)
+    {   
+        $servico = $this->model->where('idtb_servico', $servicoId)->first();
         if ($servico) {
             return $servico->idtb_servico;
+        }
+        else{
+            throw new ServiceNotFoundedException("Serviço não encontrado");
         }
     }
 }
