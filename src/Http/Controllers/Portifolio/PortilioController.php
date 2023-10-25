@@ -207,7 +207,7 @@ class PortilioController
             return;
         }
 
-        Response::json(['sucess' => 'Foto deletada com sucesso']);
+        Response::json(['sucess' => 'Portifólio deletado com sucesso']);
 
     }
 }
