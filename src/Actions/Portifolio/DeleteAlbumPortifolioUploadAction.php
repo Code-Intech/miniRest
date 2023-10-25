@@ -29,7 +29,6 @@ class DeleteAlbumPortifolioUploadAction
         try {
             $portifolioRepository->deleteAlbum($albumId, $prestadorId, $userId);
         } catch (PortifolioPrestadorNotFoundException|ModelNotFoundException $e) {
-            var_dump($e->getMessage());
             throw new PortifolioPrestadorNotFoundException();
         }
 
