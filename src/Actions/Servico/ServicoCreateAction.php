@@ -52,24 +52,10 @@ class ServicoCreateAction
                     $servicoHabilidadeRepository->storeServicoHabilidade($servicoId, $contratanteId, $userId, $habilidadeId);
                 }
             }
-
-            // $upload = new S3Storage(new PublicAcl());
             
-            // foreach($upload->reArrayFiles($servicoDTO->toArray()['images']) as $file)
-            // {
-            //     $fileName = UUIDFileName::uuidFileName($file['name']);
-            //     $upload->upload('servico/' . $fileName, $file['tmp_name']);
-
-            //     $servicoRepository->storeImages(
-            //         $fileName, 
-            //         $data['tb_servico_idtb_servico'], 
-            //         $data['tb_servico_tb_contratante_idtb_contratante'],
-            //         $data['tb_servico_tb_contratante_tb_user_idtb_user'],
-            //     );
-            // }
-            
-
             DB::commit();
+            return $servicoId;
+
 
         } catch (\Exception $exception) {
             DB::rollback();
