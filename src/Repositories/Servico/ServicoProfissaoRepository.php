@@ -28,6 +28,22 @@ class ServicoProfissaoRepository
             ]);
         }
     }
+
+
+    public function updateServicoProfissoes(int $servicoId, array $profissoes, int $userId, int $contratanteId): void
+    {
+        $this->servicoProfissao->where('tb_servico_idtb_servico', $servicoId)->delete();
+
+        foreach ($profissoes as $profissaoId) {
+            $this->servicoProfissao->create([
+                'tb_servico_idtb_servico' => $servicoId,
+                'tb_servico_tb_contratante_idtb_contratante' => $contratanteId,
+                'tb_servico_tb_contratante_tb_user_idtb_user' => $userId,
+                'tb_profissoes_idtb_profissoes' => $profissaoId,
+            ]);
+        }
+    }
+
 }
 
 ?>

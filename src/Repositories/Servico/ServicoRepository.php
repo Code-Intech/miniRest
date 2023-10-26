@@ -176,25 +176,17 @@ class ServicoRepository
         }
     }
 
-    public function updateServico(int $userId, array $data)
+    public function updateServico(array $data)
     {
-        return $this->model
-        ->where("tb_contratante_tb_user_idtb_user", $userId)
-        ->update(
-            [
-                'Titulo_Servico' => $data['Titulo_Servico'],
-                'Data_Inicio' => $data['Data_Inicio'],
-                'Estimativa_de_distancia' => $data['Estimativa_de_distancia'],
-                'Estimativa_Valor' => $data['Estimativa_Valor'],
-                'Estimativa_Idade' => $data['Estimativa_Idade'],
-                'Remoto_Presencial' => $data['Remoto_Presencial'],
-                'Estimativa_de_Termino' => $data['Estimativa_de_Termino'],
-                'Desc' => $data['Desc'],
-                'tb_contratante_idtb_contratante' => $data['tb_contratante_idtb_contratante'],
-                'tb_contratante_tb_user_idtb_user' => $data['tb_contratante_tb_user_idtb_user'],
-                'tb_end_idtb_end' => $data['tb_end_idtb_end'],
-            ]
-        );
+        $servicoId = $data['idtb_servico'];
+        try{
+            return DB::transaction(function() use($data, $servicoId){
+                $servico = $this->model->where('idtb_servico', $servicoId)->update($data);
+                return $servico;
+            });
+        }catch(\Exception $e){
+            throw new DatabaseInsertException("Erro ao atualizar serviço.", StatusCode::SERVER_ERROR, $e);
+        }
     }
 
     public function storeImages(string $itenFileName, int $servicoId, int $contratanteId, int $userId)

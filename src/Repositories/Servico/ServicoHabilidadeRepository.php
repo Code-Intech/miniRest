@@ -7,11 +7,11 @@ use MiniRest\Models\Servico\ServicoHabilidade;
 
 class ServicoHabilidadeRepository
 {
-    private ServicoHabilidade $servicoHabildade;
+    private ServicoHabilidade $servicoHabilidade;
 
     public function __construct()
     {
-        $this->servicoHabildade = new ServicoHabilidade();
+        $this->servicoHabilidade = new ServicoHabilidade();
     }
 
     /**
@@ -21,7 +21,7 @@ class ServicoHabilidadeRepository
      public function storeServicoHabilidade(int $servicoId, int $contratanteId, $userId, $habilidades):void
      {
         foreach($habilidades as $habilidadeId){
-            $this->servicoHabildade->create([
+            $this->servicoHabilidade->create([
                 'tb_servico_idtb_servico' => $servicoId,
                 'tb_servico_tb_contratante_idtb_contratante' => $contratanteId,
                 'tb_servico_tb_contratante_tb_user_idtb_user' => $userId,
@@ -29,5 +29,21 @@ class ServicoHabilidadeRepository
             ]);
         }
      }
+
+     public function updateServicoHabilidades(int $servicoId, array $habilidades, int $userId, int $contratanteId): void
+    {
+        // Primeiro, exclua todas as associações de habilidades para o serviço
+        $this->servicoHabilidade->where('tb_servico_idtb_servico', $servicoId)->delete();
+
+        // Em seguida, insira as novas associações
+        foreach ($habilidades as $habilidadeId) {
+            $this->servicoHabilidade->create([
+                'tb_servico_idtb_servico' => $servicoId,
+                'tb_servico_tb_contratante_idtb_contratante' => $contratanteId,
+                'tb_servico_tb_contratante_tb_user_idtb_user' => $userId,
+                'tb_habilidades_idtb_habilidades' => $habilidadeId,
+            ]);
+        }
+    }
 }
 ?>

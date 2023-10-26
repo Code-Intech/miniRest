@@ -16,6 +16,7 @@ use MiniRest\Repositories\AddressRepository;
 use MiniRest\Repositories\ContratanteRepository;
 use Illuminate\Database\Capsule\Manager as DB;
 use MiniRest\Actions\Servico\ServicoUploadImageAction;
+use MiniRest\DTO\Servico\ServicoUpdateDTO;
 use MiniRest\DTO\Servico\ServicoUploadImageDTO;
 use MiniRest\Repositories\Servico\ServicoRepository;
 
@@ -82,14 +83,12 @@ class ServicoController extends Controller
         $enderecoDTO = new AddressCreateDTO($request);
         $enderecoId = $this->addressRepository->store($enderecoDTO->toArray());
 
-        $tb_contratante_idtb_contratante = $contratanteId;
-
         $profissoes = $request->json('profissoes');
         $habilidades = $request->json('habilidades');
 
         try {
             $servicoCreateAction = new ServicoCreateAction();
-            $servicoCreateAction->execute(new ServicoCreateDTO($request, $tb_contratante_idtb_contratante, $userId, $enderecoId, $profissoes, $habilidades));
+            $servicoCreateAction->execute(new ServicoCreateDTO($request, $contratanteId, $userId, $enderecoId, $profissoes, $habilidades));
 
             return Response::json(['message' => 'Serviço criado com sucesso'], 201);
 
@@ -97,6 +96,43 @@ class ServicoController extends Controller
             DB::rollback();
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
+    }
+
+    public function update(Request $request, $servicoId)
+    {
+        $validation = $request->rules([
+            'Titulo_Servico' => 'required',
+            'Data_Inicio' => 'required',
+            'Estimativa_de_distancia' => 'required',
+            'Estimativa_Valor' => 'required',
+            'Estimativa_Idade' => 'required',
+            'Remoto_Presencial' => 'required',
+            'Estimativa_de_Termino' => 'required',
+            'Desc' => 'required',
+        ])->validate();
+
+        if(!$validation){
+            $request->errors();
+            return;
+        }
+
+        $userId = Auth::id($request);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+        $enderecoDTO = new AddressCreateDTO($request);
+        $enderecoId = $this->addressRepository->store($enderecoDTO->toArray());
+
+        try{
+            $servicoUpdateAction = new ServicoUpdateAction();
+            $servicoUpdateAction->execute(new ServicoUpdateDTO($request, $servicoId, $contratanteId, $userId, $enderecoId));
+
+            return Response::json(['message' => 'Serviço atualizado com sucesso'], 201);
+
+        }catch (DatabaseInsertException $exception) {
+            DB::rollback();
+            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
+
+
     }
 
     public function uploadImage(Request $request, $servicoId)
@@ -127,57 +163,6 @@ class ServicoController extends Controller
             return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
         }
 
-    }
-
-
-    public function update(Request $request, int $servicoId)
-    {
-        $validation = $request->rules([
-            'Data_Inicio' => 'required',
-            'Estimativa_de_distancia' => 'required',
-            'Estimativa_Valor' => 'required',
-            'Estimativa_Idade' => 'required',
-            'Remoto_Presencial' => 'required',
-            'Estimativa_de_Termino' => 'required',
-            'Desc' => 'required',
-            'profissoes' => 'array',
-            'habilidades' => 'array',
-        ])->validate();
-
-        if (!$validation) {
-            $request->errors();
-            return;
-        }
-
-        $userId = Auth::id($request);
-
-        $enderecoRepository = new AddressRepository();
-        $enderecoDTO = new AddressCreateDTO($request);
-        $enderecoId = $enderecoRepository->store($enderecoDTO->toArray());
-
-
-
-        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
-
-        if(!$contratanteId)
-        {
-            $contratanteId = $this->contratante->storeContratante($userId);
-        }
-
-        $tb_contratante_idtb_contratante = $contratanteId;
-
-        $profissoes = $request->json('profissoes');
-        $habilidades = $request->json('habilidades');
-
-        try {
-            $servicoUpdateAction = new ServicoUpdateAction();
-            $servicoUpdateAction->execute($userId, new ServicoCreateDTO($request, $servicoId, $tb_contratante_idtb_contratante, $enderecoId, $profissoes, $habilidades));
-
-            return Response::json(['message' => 'Serviço atualizado com sucesso']);
-        } catch (DatabaseInsertException $exception) {
-            DB::rollback();
-            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
-        }
     }
 
 }

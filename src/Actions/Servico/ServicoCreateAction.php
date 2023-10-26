@@ -10,10 +10,6 @@ use MiniRest\Models\Servico\Servico;
 use Illuminate\Database\Capsule\Manager as DB;
 use MiniRest\Repositories\Servico\ServicoHabilidadeRepository;
 use MiniRest\Repositories\Servico\ServicoProfissaoRepository;
-use MiniRest\Storage\Acl\PublicAcl;
-use MiniRest\Storage\S3Storage;
-use MiniRest\Storage\UUIDFileName;
-
 class ServicoCreateAction
 {
     /**
