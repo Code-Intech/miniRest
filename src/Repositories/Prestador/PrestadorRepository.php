@@ -25,7 +25,7 @@ class PrestadorRepository
         $data = [];
 
         foreach ($prestadores as $prestador) {
-            $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+            $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'tb_user_idtb_user', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
                 ->where('idtb_prestador', $prestador->idtb_prestador)
                 ->first();
 
