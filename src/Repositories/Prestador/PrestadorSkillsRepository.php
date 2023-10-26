@@ -33,4 +33,18 @@ class PrestadorSkillsRepository
 
     }
 
+    public function updatePrestadorSkills(int $userId, int $prestadorId, array $data): void
+    {
+
+        $this->prestadorHabilidades
+            ->where('tb_prestador_idtb_prestador', $prestadorId)
+            ->where('tb_prestador_tb_user_idtb_user', $userId)
+            ->delete();
+
+        foreach ($data as $dataSkill) {
+            $this->storePrestadorSkills($userId, $prestadorId, $dataSkill['tb_habilidades_idtb_habilidades']);
+        }
+
+    }
+
 }

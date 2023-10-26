@@ -33,4 +33,21 @@ class PrestadorProfessionRepository
 
     }
 
+    /**
+     * @throws DatabaseInsertException
+     */
+    public function updatePrestadorProfession(int $userId, int $prestadorId, array $data): void
+    {
+
+        $this->prestadorProfissao
+            ->where('tb_prestador_idtb_prestador', $prestadorId)
+            ->where('tb_prestador_tb_user_idtb_user', $userId)
+            ->delete();
+
+        foreach ($data as $dataJob) {
+            $this->storePrestadorProfession($userId, $prestadorId, $dataJob);
+        }
+
+    }
+
 }
