@@ -21,6 +21,8 @@ use MiniRest\DTO\Servico\ServicoUploadImageDTO;
 use MiniRest\Repositories\Servico\ServicoRepository;
 use MiniRest\Actions\Servico\ServicoUpdateProfissaoAction;
 use MiniRest\DTO\Servico\ServicoUpdateProfissaoDTO;
+use MiniRest\Actions\Servico\ServicoUpdateHabilidadeAction;
+use MiniRest\DTO\Servico\ServicoUpdateHabilidadeDTO;
 
 class ServicoController extends Controller
 {
@@ -163,6 +165,34 @@ class ServicoController extends Controller
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
 
+
+    }
+
+    public function updateHabilidade(Request $request, $servicoId)
+    {
+        $validation = $request->rules(['habilidades' => 'array'])->validate();
+        
+        if(!$validation)
+        {
+            $request->errors();
+            return;
+        }
+
+        $userId = Auth::id($request);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+        $habilidades = $request->json('habilidades');
+        
+
+        try{
+            $servicoUpdateHabilidadeAction = new ServicoUpdateHabilidadeAction();
+            $servicoUpdateHabilidadeAction->execute(new ServicoUpdateHabilidadeDTO($request, $servicoId, $contratanteId, $userId, $habilidades));
+
+            return Response::json(['message' => 'Habilidades do Serviço atualizadas com sucesso'], 201);
+
+        }catch(DatabaseInsertException $exception){
+            DB::rollback();
+            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
 
     }
 

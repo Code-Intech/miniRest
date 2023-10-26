@@ -17,6 +17,7 @@ use MiniRest\Http\Controllers\{Avatar\AvatarController,
 use MiniRest\Http\Controllers\Contratante\ContratanteController;
 use MiniRest\Http\Controllers\Servico\ServicoController;
 use MiniRest\Http\Controllers\Servico\ServicoImgController;
+use MiniRest\Models\Servico\Servico;
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
@@ -49,6 +50,8 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::post('/servico/upload/img/{id}', [ServicoController::class, 'uploadImage']);
     Router::patch('/servico/update/{id}', [ServicoController::class, 'update']);
     Router::patch('/servico/update/profissoes/{id}', [ServicoController::class,'updateProfissao']);
+    Router::patch('/servico/update/habilidades/{id}', [ServicoController::class, 'updateHabilidade']);
+
     Router::get('/servico/me', [ServicoController::class, 'me']);
 
     // Portifólio
