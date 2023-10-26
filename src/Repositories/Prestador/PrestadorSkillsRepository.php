@@ -33,6 +33,9 @@ class PrestadorSkillsRepository
 
     }
 
+    /**
+     * @throws DatabaseInsertException
+     */
     public function updatePrestadorSkills(int $userId, int $prestadorId, array $data): void
     {
 
