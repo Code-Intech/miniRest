@@ -19,6 +19,8 @@ use MiniRest\Actions\Servico\ServicoUploadImageAction;
 use MiniRest\DTO\Servico\ServicoUpdateDTO;
 use MiniRest\DTO\Servico\ServicoUploadImageDTO;
 use MiniRest\Repositories\Servico\ServicoRepository;
+use MiniRest\Actions\Servico\ServicoUpdateProfissaoAction;
+use MiniRest\DTO\Servico\ServicoUpdateProfissaoDTO;
 
 class ServicoController extends Controller
 {
@@ -128,6 +130,35 @@ class ServicoController extends Controller
             return Response::json(['message' => 'Serviço atualizado com sucesso'], 201);
 
         }catch (DatabaseInsertException $exception) {
+            DB::rollback();
+            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
+
+
+    }
+
+    public function updateProfissao(Request $request, $servicoId)
+    {
+        $validation = $request->rules([
+            'profissoes' => 'array'
+        ])->validate();
+
+        if(!$validation){
+            $request->errors();
+            return;
+        }
+
+        $userId = Auth::id($request);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+        $profissoes = $request->json('profissoes');
+
+        try{
+            $servicoUpdateProfissaoAction = new ServicoUpdateProfissaoAction();
+            $servicoUpdateProfissaoAction->execute(new ServicoUpdateProfissaoDTO($request, $servicoId, $contratanteId,$userId,$profissoes));
+
+            return Response::json(['message' => 'Profissões do Serviço atualizadas com sucesso'], 201);
+
+        }catch(DatabaseInsertException $exception){
             DB::rollback();
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
