@@ -132,7 +132,7 @@ class PortilioController
             );
 
         } catch (\Exception $exception) {
-            Response::json(['error'=> $exception->getMessage()], StatusCode::SERVER_ERROR);
+            Response::json(['error'=> $exception->getMessage()], StatusCode::NOT_FOUND);
             return;
         }
 
