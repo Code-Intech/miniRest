@@ -196,6 +196,20 @@ class ServicoController extends Controller
 
     }
 
+    public function deleteServico(Request $request, $servicoId)
+    {
+        try
+        {
+            $this->servico->deleteServico($servicoId);
+            return Response::json(['message' => 'Serviço deletado com sucesso']);
+        }
+        catch(DatabaseInsertException $exception)
+        {
+            DB::rollback();
+            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
+    }
+    
     public function uploadImage(Request $request, $servicoId)
     {
         $validation = $request->rules([

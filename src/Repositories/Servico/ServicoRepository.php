@@ -189,6 +189,23 @@ class ServicoRepository
         }
     }
 
+    public function deleteServico($servicoId)
+    {
+        try {
+            return DB::transaction(function () use ($servicoId) {
+                $servico = $this->model->where('idtb_servico', $servicoId)->first();
+                if ($servico) {
+                    $servico->update(['FlgStatus' => 0]);
+                    return true;
+                }
+                return false;
+            });
+        } catch (\Exception $e) {
+            throw new DatabaseInsertException("Erro ao deletar serviço.", StatusCode::SERVER_ERROR, $e);
+        }
+
+    }
+
     public function storeImages(string $itenFileName, int $servicoId, int $contratanteId, int $userId)
     {
         return $this->imagesModel->create([

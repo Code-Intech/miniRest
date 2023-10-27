@@ -51,6 +51,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/servico/update/{id}', [ServicoController::class, 'update']);
     Router::patch('/servico/update/profissoes/{id}', [ServicoController::class,'updateProfissao']);
     Router::patch('/servico/update/habilidades/{id}', [ServicoController::class, 'updateHabilidade']);
+    Router::patch('/servico/delete/{id}', [ServicoController::class, 'deleteServico']);
 
     Router::get('/servico/me', [ServicoController::class, 'me']);
 
