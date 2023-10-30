@@ -7,6 +7,7 @@ use MiniRest\Http\Response\Response;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Repositories\ContratanteRepository;
 use MiniRest\Repositories\Prestador\PrestadorRepository;
+use MiniRest\Repositories\Proposta\PropostaRepository;
 use MiniRest\Actions\Proposta\PropostaCreateAction;
 use MiniRest\DTO\Proposta\PropostaCreateDTO;
 use MiniRest\Http\Auth\Auth;
@@ -17,11 +18,13 @@ class PropostaController extends Controller
 {
     private ContratanteRepository $contratante;
     private PrestadorRepository $prestador;
+    private PropostaRepository $proposta;
 
     public function __construct()
     {
         $this->contratante = new ContratanteRepository();
         $this->prestador = new PrestadorRepository();
+        $this->proposta = new PropostaRepository();
     }
 
     public function create(Request $request, $servicoId)
@@ -60,6 +63,21 @@ class PropostaController extends Controller
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
 
+    }
+
+    public function accept(int $propostaId)
+    {
+        try
+        {
+            $this->proposta->acceptProposta($propostaId);
+            return Response::json(['message' => 'Proposta aceita!']);
+        }
+        catch(DatabaseInsertException $exception)
+        {
+            DB::rollback();
+            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
+        
     }
 }
 

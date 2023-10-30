@@ -53,11 +53,12 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/servico/update/profissoes/{id}', [ServicoController::class,'updateProfissao']);
     Router::patch('/servico/update/habilidades/{id}', [ServicoController::class, 'updateHabilidade']);
     Router::patch('/servico/delete/{id}', [ServicoController::class, 'deleteServico']);
+    Router::get('/servico/me', [ServicoController::class, 'me']);
 
     //Proposta
     Router::post('/servico/proposta/{id}', [PropostaController::class, 'create']);
+    Router::patch('/servico/proposta/aceitar/{id}', [PropostaController::class, 'accept']);
 
-    Router::get('/servico/me', [ServicoController::class, 'me']);
 
     // Portifólio
     Router::post('/portifolio/create', [PortilioController::class, 'store']);

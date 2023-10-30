@@ -4,6 +4,7 @@ namespace MiniRest\Repositories\Proposta;
 
 use MiniRest\Models\Proposta\Proposta;
 use MiniRest\Exceptions\DatabaseInsertException;
+use MiniRest\Exceptions\PropostaNotFoundException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -30,6 +31,24 @@ class PropostaRepository
         catch(\Exception $e)
         {
             throw new DatabaseInsertException("Erro ao criar proposta.", StatusCode::SERVER_ERROR, $e);
+        }
+    }
+
+    public function acceptProposta(int $propostaId)
+    {
+        try
+        {
+            return DB::transaction(function() use($propostaId){
+                $proposta = $this->proposta->where('idtb_proposta', $propostaId)->first();
+                if($proposta)
+                {
+                    $proposta->update(['Proposta_Aceita' => 1]);
+                }
+            });
+        }
+        catch(\Exception $e)
+        {
+            throw new PropostaNotFoundException("Proposta não encontrada.", StatusCode::SERVER_ERROR, $e);
         }
     }
 }
