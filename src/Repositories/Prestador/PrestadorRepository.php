@@ -167,8 +167,15 @@ class PrestadorRepository
                     'tb_user_idtb_user' => $userId
                 ]
             );
+    }
 
-
+    public function getPrestadorByUserId(int $userId)
+    {
+        $prestador = Prestador::where('tb_user_idtb_user', $userId)->first();
+        if($prestador)
+        {
+            return $prestador->idtb_prestador;
+        }
     }
 
 }
