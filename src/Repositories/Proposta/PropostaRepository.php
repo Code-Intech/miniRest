@@ -51,6 +51,24 @@ class PropostaRepository
             throw new PropostaNotFoundException("Proposta não encontrada.", StatusCode::SERVER_ERROR, $e);
         }
     }
+
+    public function deleteProposta(int $propostaId)
+    {
+        try
+        {
+            return DB::transaction(function() use($propostaId){
+                $proposta = $this->proposta->where('idtb_proposta', $propostaId)->first();
+                if($proposta)
+                {
+                    $proposta->delete();
+                }
+            });
+        }
+        catch(\Exception $e)
+        {
+            throw new PropostaNotFoundException("Proposta não encontrada.", StatusCode::SERVER_ERROR, $e);
+        }
+    }
 }
 
 

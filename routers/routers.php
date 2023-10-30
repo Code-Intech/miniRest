@@ -58,6 +58,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     //Proposta
     Router::post('/servico/proposta/{id}', [PropostaController::class, 'create']);
     Router::patch('/servico/proposta/aceitar/{id}', [PropostaController::class, 'accept']);
+    Router::delete('/servico/proposta/delete/{id}', [PropostaController::class, 'delete']);
 
 
     // Portifólio

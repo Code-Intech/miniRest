@@ -77,8 +77,22 @@ class PropostaController extends Controller
             DB::rollback();
             return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
-        
     }
+
+    public function delete(int $propostaId)
+    {
+        try
+        {
+            $this->proposta->deleteProposta($propostaId);
+            return Response::json(['message' => 'Proposta deletada com sucesso!']);
+        }
+        catch(DatabaseInsertException $exception)
+        {
+            DB::rollback();
+            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
+    }
+    
 }
 
 ?>
