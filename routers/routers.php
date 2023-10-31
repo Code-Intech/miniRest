@@ -60,6 +60,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/servico/proposta/aceitar/{id}', [PropostaController::class, 'accept']);
     Router::delete('/servico/proposta/delete/{id}', [PropostaController::class, 'delete']);
     Router::get('/servico/proposta/get/{id}', [PropostaController::class, 'getAll']);
+    Router::get('/servico/proposta/me', [PropostaController::class, 'me']);
 
 
     // Portifólio

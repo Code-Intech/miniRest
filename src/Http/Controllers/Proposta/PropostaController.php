@@ -32,6 +32,13 @@ class PropostaController extends Controller
         return Response::json(['proposta' => $this->proposta->getServicoProposta($servicoId)]);
     }
 
+    public function me(Request $request)
+    {
+        $userId = Auth::id($request);
+        return Response::json(['proposta' => $this->proposta->me($userId)]);
+    }
+
+
     public function create(Request $request, $servicoId)
     {
         $validation = $request->rules(
