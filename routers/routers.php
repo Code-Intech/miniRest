@@ -18,6 +18,7 @@ use MiniRest\Http\Controllers\Contratante\ContratanteController;
 use MiniRest\Http\Controllers\Servico\ServicoController;
 use MiniRest\Http\Controllers\Servico\ServicoImgController;
 use MiniRest\Models\Servico\Servico;
+use MiniRest\Http\Controllers\Proposta\PropostaController;
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
@@ -52,8 +53,15 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/servico/update/profissoes/{id}', [ServicoController::class,'updateProfissao']);
     Router::patch('/servico/update/habilidades/{id}', [ServicoController::class, 'updateHabilidade']);
     Router::patch('/servico/delete/{id}', [ServicoController::class, 'deleteServico']);
-
     Router::get('/servico/me', [ServicoController::class, 'me']);
+
+    //Proposta
+    Router::post('/servico/proposta/{id}', [PropostaController::class, 'create']);
+    Router::patch('/servico/proposta/aceitar/{id}', [PropostaController::class, 'accept']);
+    Router::delete('/servico/proposta/delete/{id}', [PropostaController::class, 'delete']);
+    Router::get('/servico/proposta/get/{id}', [PropostaController::class, 'getAll']);
+    Router::get('/servico/proposta/me', [PropostaController::class, 'me']);
+
 
     // Portifólio
     Router::post('/portifolio/create', [PortilioController::class, 'store']);
