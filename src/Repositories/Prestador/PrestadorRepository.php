@@ -3,6 +3,7 @@
 namespace MiniRest\Repositories\Prestador;
 
 use MiniRest\Exceptions\DatabaseInsertException;
+use MiniRest\Exceptions\PrestadorNotFoundException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Models\Prestador\Prestador;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -57,6 +58,9 @@ class PrestadorRepository
         return $data;
     }
 
+    /**
+     * @throws PrestadorNotFoundException
+     */
     public function find(int|string $prestadorId)
     {
         $data = [];
@@ -79,6 +83,13 @@ class PrestadorRepository
         $prestadorApresentacao = PrestadorApresentacao::select('Apresentacao')
             ->where('tb_prestador_idtb_prestador', $prestadorId)
             ->first();
+
+        if (
+            !$prestadorAll ||
+            count($prestadorProfissao) <= 0 ||
+            count($prestadorHabilidades) <= 0 ||
+            !$prestadorApresentacao
+        ) throw new PrestadorNotFoundException();
         
         return [
             'prestadorInfo' => $prestadorAll,

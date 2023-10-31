@@ -6,6 +6,8 @@ use MiniRest\Actions\Prestador\PrestadorCreateAction;
 use MiniRest\Actions\Prestador\PrestadorUpdateAction;
 use MiniRest\DTO\Prestador\PrestadorCreateDTO;
 use MiniRest\Exceptions\DatabaseInsertException;
+use MiniRest\Exceptions\InvalidJsonResponseException;
+use MiniRest\Exceptions\PrestadorNotFoundException;
 use MiniRest\Http\Auth\Auth;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
@@ -30,7 +32,11 @@ class PrestadorController extends Controller
 
     public function findById(int $prestadorId)
     {
-        Response::json(['prestador' => $this->prestador->find($prestadorId)]);
+        try {
+            Response::json(['prestador' => $this->prestador->find($prestadorId)]);
+        } catch (PrestadorNotFoundException $e) {
+            Response::json(['error' => ['message' => $e->getMessage()]], $e->getCode());
+        }
     }
 
     public function me(Request $request)
