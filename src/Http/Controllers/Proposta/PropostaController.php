@@ -27,6 +27,11 @@ class PropostaController extends Controller
         $this->proposta = new PropostaRepository();
     }
 
+    public function getAll(int $servicoId)
+    {
+        return Response::json(['proposta' => $this->proposta->getServicoProposta($servicoId)]);
+    }
+
     public function create(Request $request, $servicoId)
     {
         $validation = $request->rules(
