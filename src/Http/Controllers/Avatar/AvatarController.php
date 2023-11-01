@@ -29,7 +29,7 @@ class AvatarController
         try {
             $avatar = (new UserUploadAvatarAction())->execute($request, $userId);
         } catch (UploadErrorException $e) {
-            Response::json(['error' => 'Error ao fazer o upload do arquivo'], $e->getCode());
+            Response::json(['error' => ['message' => 'Error ao fazer o upload do arquivo']], $e->getCode());
             return;
         }
         Response::json(['success' => ['message' => 'Upload efetuado com sucesso', 'avatar_url' => $avatar]]);
@@ -42,7 +42,7 @@ class AvatarController
         try {
             $avatar = (new UserGetAvatarAction())->execute($userId);
         } catch (AvatarNotFoundException $e) {
-            Response::json(['error' => $e->getMessage()], $e->getCode());
+            Response::json(['error' => ['message' => $e->getMessage()]], $e->getCode());
             return;
         }
 

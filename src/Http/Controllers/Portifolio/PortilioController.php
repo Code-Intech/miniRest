@@ -53,7 +53,7 @@ class PortilioController
                 Auth::id($request)
             );
         } catch (UploadErrorException|PrestadorNotFoundException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 
@@ -78,7 +78,7 @@ class PortilioController
                 $portifolioId
             );
         } catch (UploadErrorException|PrestadorNotFoundException|PortifolioPrestadorNotFoundException|PortifolioUpdateNotAllowedException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 
@@ -114,7 +114,7 @@ class PortilioController
                 $portifolioId
             );
         } catch (UploadErrorException|PrestadorNotFoundException|PortifolioPrestadorNotFoundException|PortifolioUpdateNotAllowedException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 
@@ -132,7 +132,7 @@ class PortilioController
             );
 
         } catch (\Exception $exception) {
-            Response::json(['error'=> $exception->getMessage()], StatusCode::NOT_FOUND);
+            Response::json(['error'=> ['message' => $exception->getMessage()]], StatusCode::NOT_FOUND);
             return;
         }
 
@@ -150,7 +150,7 @@ class PortilioController
             );
 
         } catch (PortifolioPrestadorNotFoundException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 
@@ -168,7 +168,7 @@ class PortilioController
             );
 
         } catch (PortifolioPrestadorNotFoundException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 
@@ -185,7 +185,7 @@ class PortilioController
             );
 
         } catch (PrestadorNotFoundException|AlbumPhotoNotFoundException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 
@@ -203,7 +203,7 @@ class PortilioController
             );
 
         } catch (PrestadorNotFoundException|PortifolioPrestadorNotFoundException $exception) {
-            Response::json(['error'=> $exception->getMessage()], $exception->getCode());
+            Response::json(['error'=> ['message' => $exception->getMessage()]], $exception->getCode());
             return;
         }
 

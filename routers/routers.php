@@ -1,10 +1,10 @@
 <?php
 
-use MiniRest\Actions\Servico\ServicoUploadImageAction;
 use MiniRest\Http\Middlewares\AuthMiddleware;
 use MiniRest\Router\Router;
 
-use MiniRest\Http\Controllers\{Avatar\AvatarController,
+use MiniRest\Http\Controllers\{
+    Avatar\AvatarController,
     AuthController,
     Categories\CategoriesController,
     Portifolio\PortilioController,
@@ -13,12 +13,11 @@ use MiniRest\Http\Controllers\{Avatar\AvatarController,
     Skills\SkillsController,
     Gender\GenderController,
     HealthController,
-    Users\UserController};
-use MiniRest\Http\Controllers\Contratante\ContratanteController;
-use MiniRest\Http\Controllers\Servico\ServicoController;
-use MiniRest\Http\Controllers\Servico\ServicoImgController;
-use MiniRest\Models\Servico\Servico;
-use MiniRest\Http\Controllers\Proposta\PropostaController;
+    Users\UserController,
+    Contratante\ContratanteController,
+    Servico\ServicoController,
+    Proposta\PropostaController
+};
 
 Router::post('/auth/login', [AuthController::class, 'login']);
 Router::post('/api/user/create', [UserController::class, 'store']);
@@ -77,7 +76,10 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
 });
 
+// Status
 Router::get('/health', [HealthController::class, 'health']);
+
+// Gender
 Router::get('/gender', [GenderController::class, 'index']);
 
 //Categories
