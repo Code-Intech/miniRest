@@ -57,32 +57,41 @@ class PropostaController extends Controller
 
         $userId = Auth::id($request);
         $contratanteId = $this->contratante->getContratanteByServicoId($servicoId);
+        $contratanteUserId = $this->contratante->getContratanteIdByUserId($userId);
         $contratanteUser = $this->contratante->getUserByServicoId($servicoId);
         $prestadorId = $this->prestador->getPrestadorByUserId($userId);
         $verificaProposta = $this->proposta->getPrestadorProposta($servicoId, $prestadorId);
-        $verificaContratante = $this->proposta->getContratanteProposta($contratanteId, $servicoId);
+        $verificaContratante = $this->proposta->getContratanteProposta($contratanteUserId, $servicoId);
 
-        if($verificaProposta->isEmpty())
+        if($verificaContratante->isEmpty())
         {
-            try
+            if($verificaProposta->isEmpty())
             {
-                $proposta_action = new PropostaCreateAction();
-                $propostaId = $proposta_action->execute(new PropostaCreateDTO($request, $userId, $contratanteId, $prestadorId, $servicoId, $contratanteUser));
+                try
+                {
+                    $proposta_action = new PropostaCreateAction();
+                    $propostaId = $proposta_action->execute(new PropostaCreateDTO($request, $userId, $contratanteId, $prestadorId, $servicoId, $contratanteUser));
 
-                return Response::json(['message' => 'Proposta inserida com sucesso!', 'id_proposta' => $propostaId]);
+                    return Response::json(['message' => 'Proposta inserida com sucesso!', 'id_proposta' => $propostaId]);
 
+
+                }
+                catch(DatabaseInsertException $exception)
+                {
+                    DB::rollback();
+                    return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+                }
 
             }
-            catch(DatabaseInsertException $exception)
-            {
-                DB::rollback();
-                return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+            else{
+                return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
             }
-
         }
-        else{
-            return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
+        else
+        {
+            return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!']);
         }
+        
 
         
     }
@@ -107,7 +116,7 @@ class PropostaController extends Controller
             }
         }
         else{
-            return Response::json(['message' => 'Este contratante já aceitou uma proposta']);
+            return Response::json(['message' => 'Este serviço já tem uma proposta aceita']);
         }
         
     }
