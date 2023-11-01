@@ -73,8 +73,6 @@ class PropostaController extends Controller
                     $propostaId = $proposta_action->execute(new PropostaCreateDTO($request, $userId, $contratanteId, $prestadorId, $servicoId, $contratanteUser));
 
                     return Response::json(['message' => 'Proposta inserida com sucesso!', 'id_proposta' => $propostaId]);
-
-
                 }
                 catch(DatabaseInsertException $exception)
                 {
@@ -91,8 +89,6 @@ class PropostaController extends Controller
         {
             return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!']);
         }
-        
-
         
     }
 
