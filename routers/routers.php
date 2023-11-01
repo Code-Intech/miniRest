@@ -7,7 +7,7 @@ use MiniRest\Http\Controllers\{
     Avatar\AvatarController,
     AuthController,
     Categories\CategoriesController,
-    Portifolio\PortilioController,
+    Portifolio\PortifolioController,
     Prestador\PrestadorController,
     Professions\ProfessionsController,
     Skills\SkillsController,
@@ -63,15 +63,15 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
 
     // Portifólio
-    Router::post('/portifolio/create', [PortilioController::class, 'store']);
-    Router::post('/portifolio/update/{id}', [PortilioController::class, 'update']);
-    Router::post('/portifolio/add/{id}', [PortilioController::class, 'putPhoto']);
+    Router::post('/portifolio/create', [PortifolioController::class, 'store']);
+    Router::post('/portifolio/update/{id}', [PortifolioController::class, 'update']);
+    Router::post('/portifolio/add/{id}', [PortifolioController::class, 'putPhoto']);
 
-    Router::delete('/album/remove/{id}', [PortilioController::class, 'deleteAlbumPhotoById']);
-    Router::delete('/portifolio/album/{id}', [PortilioController::class, 'deleteAlbumById']);
+    Router::delete('/album/remove/{id}', [PortifolioController::class, 'deleteAlbumPhotoById']);
+    Router::delete('/portifolio/album/{id}', [PortifolioController::class, 'deleteAlbumById']);
 
-    Router::get('/portifolio', [PortilioController::class, 'getUserPortifolios']);
-    Router::get('/album/{id}', [PortilioController::class, 'getPortifolioAlbumById']);
+    Router::get('/portifolio', [PortifolioController::class, 'getUserPortifolios']);
+    Router::get('/album/{id}', [PortifolioController::class, 'getPortifolioAlbumById']);
 
 
 });
@@ -98,5 +98,5 @@ Router::get('/servico', [ServicoController::class, 'index']);
 Router::get('/servico/{id}', [ServicoController::class, 'findById']);
 
 // Portifólio
-Router::get('/portifolio/{id}', [PortilioController::class, 'getPortifoliosByUserId']);
+Router::get('/portifolio/{id}', [PortifolioController::class, 'getPortifoliosByUserId']);
 

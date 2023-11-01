@@ -23,7 +23,7 @@ use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 use MiniRest\Repositories\Portifolio\PortifolioRepository;
 
-class PortilioController
+class PortifolioController
 {
     public function store(Request $request)
     {
