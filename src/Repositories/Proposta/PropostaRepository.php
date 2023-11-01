@@ -19,6 +19,24 @@ class PropostaRepository
         $this->proposta = new Proposta();
     }
 
+    public function getPrestadorProposta(int $servicoId, int $prestadorId)
+    {
+        $proposta = Proposta::where('tb_prestador_idtb_prestador', $prestadorId)
+            ->where('tb_servico_idtb_servico', $servicoId)
+            ->get();
+
+            return $proposta;
+    }
+
+    public function getContratanteProposta(int $contratanteId, $servicoId)
+    {
+        $proposta = Proposta::where('tb_servico_tb_contratante_idtb_contratante', $contratanteId)
+            ->where('tb_servico_idtb_servico', $servicoId)
+            ->get();
+
+            return $proposta;
+    }
+
     public function getServicoProposta(int $servicoId)
     {
         try{
