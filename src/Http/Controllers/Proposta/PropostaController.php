@@ -89,16 +89,27 @@ class PropostaController extends Controller
 
     public function accept(int $propostaId)
     {
-        try
+
+        $servicoId = $this->proposta->getServicoIdByPropostaId($propostaId);
+        $proposta_aceita = $this->proposta->getPropostaAceita($servicoId);
+
+        if($proposta_aceita->isEmpty())
         {
-            $this->proposta->acceptProposta($propostaId);
-            return Response::json(['message' => 'Proposta aceita!']);
+            try
+            {
+                $this->proposta->acceptProposta($propostaId);
+                return Response::json(['message' => 'Proposta aceita!']);
+            }
+            catch(DatabaseInsertException $exception)
+            {
+                DB::rollback();
+                return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+            }
         }
-        catch(DatabaseInsertException $exception)
-        {
-            DB::rollback();
-            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        else{
+            return Response::json(['message' => 'Este contratante já aceitou uma proposta']);
         }
+        
     }
 
     public function delete(int $propostaId)
