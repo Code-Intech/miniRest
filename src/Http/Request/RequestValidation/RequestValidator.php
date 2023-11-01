@@ -78,7 +78,7 @@ class RequestValidator
             foreach ($this->errorMessages as $item){
                 $erro[] = $item[0];
             }
-            Response::json(['errors' => $erro], StatusCode::REQUEST_ERROR);
+            Response::json(['error' => ['message' => $erro]], StatusCode::REQUEST_ERROR);
             return;
         }
     }
