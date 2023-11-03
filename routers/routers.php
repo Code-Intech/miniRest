@@ -47,11 +47,13 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
     Router::post('/servico/upload/img/{id}', [ServicoController::class, 'uploadImage']);
-    Router::post('/servico/upload/album/{id}', [ServicoController::class, 'uploadAlbum']);
+    // Router::post('/servico/upload/album/{id}', [ServicoController::class, 'uploadAlbum']);
+    Router::patch('/servico/update/images/{id}', [ServicoController::class, 'updateImages']);
     Router::patch('/servico/update/{id}', [ServicoController::class, 'update']);
     Router::patch('/servico/update/profissoes/{id}', [ServicoController::class,'updateProfissao']);
     Router::patch('/servico/update/habilidades/{id}', [ServicoController::class, 'updateHabilidade']);
     Router::delete('/servico/delete/{id}', [ServicoController::class, 'deleteServico']);
+    Router::delete('/servico/delete/images/{id}', [ServicoController::class, 'deleteImages']);
     Router::get('/servico/me', [ServicoController::class, 'me']);
 
     //Proposta

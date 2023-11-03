@@ -6,6 +6,7 @@ use MiniRest\Models\Servico\Servico;
 use MiniRest\Models\Servico\ServicoUploadImage;
 use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Exceptions\ServiceNotFoundedException;
+use MiniRest\Exceptions\ImagesNotFoundException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -215,6 +216,25 @@ class ServicoRepository
             "tb_servico_tb_contratante_tb_user_idtb_user"=> $userId,
         ]);
     }
+
+   public function deleteImages(int $servicoId)
+   {
+        try{
+            return DB::transaction(function() use($servicoId){
+                $images = $this->imagesModel->where('tb_servico_idtb_servico', $servicoId);
+                if($images)
+                {
+                    $images->delete();
+                }
+            });
+        }
+        catch(\Exception $e)
+        {
+            throw new ImagesNotFoundException("Imagens não encontradas");
+        }
+        
+
+   }
 
     public function getServicoId(int $servicoId)
     {   
