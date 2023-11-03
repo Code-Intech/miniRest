@@ -35,9 +35,9 @@ class AvatarController
         Response::json(['success' => ['message' => 'Upload efetuado com sucesso', 'avatar_url' => $avatar]]);
     }
 
-    public function avatar(Request $request)
+    public function avatar(Request $request, ?int $userId)
     {
-        $userId = Auth::id($request);
+        if (!$userId) $userId = Auth::id($request);
 
         try {
             $avatar = (new UserGetAvatarAction())->execute($userId);

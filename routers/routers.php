@@ -32,7 +32,6 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 
     // User avatar upload
     Router::post('/user/upload/avatar', [AvatarController::class, 'uploadAvatar']);
-    Router::get('/user/avatar', [AvatarController::class, 'avatar']);
 
     // Verify jwt token from logged user
     Router::get('/profile', [AuthController::class, 'profile']);
@@ -100,3 +99,5 @@ Router::get('/servico/{id}', [ServicoController::class, 'findById']);
 // Portifólio
 Router::get('/portifolio/{id}', [PortifolioController::class, 'getPortifoliosByUserId']);
 
+// Avatar
+Router::get('/user/avatar/{userId?}', [AvatarController::class, 'avatar'], [AuthMiddleware::class]);

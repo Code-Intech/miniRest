@@ -44,7 +44,7 @@ class Router {
 
     private static function add($method, $route, $action, $middlewares = []): void
     {
-        $pattern = '#^' . preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', self::$prefix . $route) . '$#';
+        $pattern = '#^' . preg_replace('/\{([a-zA-Z0-9_]+)\??\}/', '(?P<$1>[^/]+)?', self::$prefix . $route) . '$#';
 
         $mergedMiddlewares = array_merge(self::$groupMiddlewares, $middlewares);
 
