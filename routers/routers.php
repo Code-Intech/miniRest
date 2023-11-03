@@ -100,4 +100,4 @@ Router::get('/servico/{id}', [ServicoController::class, 'findById']);
 Router::get('/portifolio/{id}', [PortifolioController::class, 'getPortifoliosByUserId']);
 
 // Avatar
-Router::get('/user/avatar/{userId?}', [AvatarController::class, 'avatar'], [AuthMiddleware::class]);
+Router::get('/user/avatar/{userId?}', [AvatarController::class, 'avatar']);
