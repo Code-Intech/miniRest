@@ -113,9 +113,7 @@ class PropostaController extends Controller
             {
                 return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!']);
             }
-        }
-
-        
+        }    
         
     }
 

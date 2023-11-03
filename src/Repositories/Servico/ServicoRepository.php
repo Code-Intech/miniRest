@@ -26,7 +26,7 @@ class ServicoRepository
         $data = [];
 
         foreach($servicos as $servico){
-            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc')
+            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servico->idtb_servico)
                 ->first();
             
@@ -73,7 +73,7 @@ class ServicoRepository
     public function find(int|string $servicoId)
     {
 
-        $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc')
+        $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicoId)
                 ->first();
             
@@ -119,7 +119,7 @@ class ServicoRepository
         $data = [];
 
         foreach($servico as $servicos){
-            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc')
+            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicos->idtb_servico)
                 ->first();
             
