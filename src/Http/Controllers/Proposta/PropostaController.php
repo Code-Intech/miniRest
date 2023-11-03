@@ -61,34 +61,61 @@ class PropostaController extends Controller
         $contratanteUser = $this->contratante->getUserByServicoId($servicoId);
         $prestadorId = $this->prestador->getPrestadorByUserId($userId);
         $verificaProposta = $this->proposta->getPrestadorProposta($servicoId, $prestadorId);
-        $verificaContratante = $this->proposta->getContratanteProposta($contratanteUserId, $servicoId);
 
-        if($verificaContratante->isEmpty())
-        {
+        if($contratanteUserId == null){
             if($verificaProposta->isEmpty())
+                {
+                    try
+                    {
+                        $proposta_action = new PropostaCreateAction();
+                        $propostaId = $proposta_action->execute(new PropostaCreateDTO($request, $userId, $contratanteId, $prestadorId, $servicoId, $contratanteUser));
+
+                        return Response::json(['message' => 'Proposta inserida com sucesso!', 'id_proposta' => $propostaId]);
+                    }
+                    catch(DatabaseInsertException $exception)
+                    {
+                        DB::rollback();
+                        return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+                    }
+
+                }
+                else{
+                    return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
+                }
+
+        }
+        else{
+            $verificaContratante = $this->proposta->getContratanteProposta($contratanteUserId, $servicoId);
+
+            if($verificaContratante->isEmpty())
             {
-                try
+                if($verificaProposta->isEmpty())
                 {
-                    $proposta_action = new PropostaCreateAction();
-                    $propostaId = $proposta_action->execute(new PropostaCreateDTO($request, $userId, $contratanteId, $prestadorId, $servicoId, $contratanteUser));
+                    try
+                    {
+                        $proposta_action = new PropostaCreateAction();
+                        $propostaId = $proposta_action->execute(new PropostaCreateDTO($request, $userId, $contratanteId, $prestadorId, $servicoId, $contratanteUser));
 
-                    return Response::json(['message' => 'Proposta inserida com sucesso!', 'id_proposta' => $propostaId]);
-                }
-                catch(DatabaseInsertException $exception)
-                {
-                    DB::rollback();
-                    return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
-                }
+                        return Response::json(['message' => 'Proposta inserida com sucesso!', 'id_proposta' => $propostaId]);
+                    }
+                    catch(DatabaseInsertException $exception)
+                    {
+                        DB::rollback();
+                        return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+                    }
 
+                }
+                else{
+                    return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
+                }
             }
-            else{
-                return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
+            else
+            {
+                return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!']);
             }
         }
-        else
-        {
-            return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!']);
-        }
+
+        
         
     }
 
