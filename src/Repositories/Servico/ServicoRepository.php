@@ -6,6 +6,7 @@ use MiniRest\Models\Servico\Servico;
 use MiniRest\Models\Servico\ServicoUploadImage;
 use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Exceptions\ServiceNotFoundedException;
+use MiniRest\Exceptions\ImagesNotFoundException;
 use MiniRest\Helpers\StatusCode\StatusCode;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -26,7 +27,7 @@ class ServicoRepository
         $data = [];
 
         foreach($servicos as $servico){
-            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc')
+            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servico->idtb_servico)
                 ->first();
             
@@ -73,7 +74,7 @@ class ServicoRepository
     public function find(int|string $servicoId)
     {
 
-        $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc')
+        $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicoId)
                 ->first();
             
@@ -119,7 +120,7 @@ class ServicoRepository
         $data = [];
 
         foreach($servico as $servicos){
-            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc')
+            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicos->idtb_servico)
                 ->first();
             
@@ -215,6 +216,25 @@ class ServicoRepository
             "tb_servico_tb_contratante_tb_user_idtb_user"=> $userId,
         ]);
     }
+
+   public function deleteImages(int $servicoId)
+   {
+        try{
+            return DB::transaction(function() use($servicoId){
+                $images = $this->imagesModel->where('tb_servico_idtb_servico', $servicoId);
+                if($images)
+                {
+                    $images->delete();
+                }
+            });
+        }
+        catch(\Exception $e)
+        {
+            throw new ImagesNotFoundException("Imagens não encontradas");
+        }
+        
+
+   }
 
     public function getServicoId(int $servicoId)
     {   

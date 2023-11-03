@@ -216,7 +216,6 @@ class ServicoController extends Controller
             'image' => 'required|multipleFiles:jpg,jpeg,png,gif',
         ])->validate('files');
 
-
         if(!$validation){
             $request->errors();
             return;
@@ -238,6 +237,69 @@ class ServicoController extends Controller
             return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
         }
 
+    }
+
+    // public function uploadAlbum(Request $request, $servicoId)
+    // {
+    //     $validation = $request->rules([
+    //         'image' => 'required|multipleFiles:jpg,jpeg,png,gif',
+    //     ])->validate('files');
+
+    //     if(!$validation){
+    //         $request->errors();
+    //         return;
+    //     }
+
+    //     $userId = Auth::id($request);   
+    //     $servicoId = $this->servico->getServicoId($servicoId);
+    //     $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+
+
+    //     try{
+    //         $servicoUploadImageAction = new ServicoUploadImageAction();
+    //         $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
+
+    //         return Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
+    //     }
+    //     catch(DatabaseInsertException $exception){
+    //         DB::rollback();
+    //         return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
+    //     }
+    // }
+
+    public function updateImages(Request $request, $servicoId)
+    {
+        $validation = $request->rules([
+            'image' => 'required|multipleFiles:jpg,jpeg,png,gif',
+        ])->validate('files');
+
+        if(!$validation){
+            $request->errors();
+            return;
+        }
+
+        $userId = Auth::id($request);   
+        $servicoId = $this->servico->getServicoId($servicoId);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+
+
+        try{
+            $this->servico->deleteImages($servicoId);
+            $servicoUploadImageAction = new ServicoUploadImageAction();
+            $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
+
+            return Response::json(['message' => 'Imagens atualizadas com sucesso'], 201);
+        }
+        catch(DatabaseInsertException $exception){
+            DB::rollback();
+            return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
+        }
+    }
+
+    public function deleteImages(Request $request, $servicoId)
+    {
+        $this->servico->deleteImages($servicoId);
+        return Response::json(['message' => 'Imagens deletadas com sucesso!']);
     }
 
 }
