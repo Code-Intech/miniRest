@@ -253,9 +253,9 @@ class ServicoRepository
         }
     }
 
-    public function getServicoUser(int $userId)
+    public function getServicoUser(int $servicoId)
     {
-        $servico = $this->model->where('tb_contratante_tb_user_idtb_user', $userId)->value('tb_contratante_tb_user_idtb_user');
+        $servico = $this->model->where('idtb_servico', $servicoId)->value('tb_contratante_tb_user_idtb_user');
         if($servico)
         {
             return $servico;
