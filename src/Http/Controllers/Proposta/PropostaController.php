@@ -13,6 +13,7 @@ use MiniRest\DTO\Proposta\PropostaCreateDTO;
 use MiniRest\Http\Auth\Auth;
 use MiniRest\Exceptions\DatabaseInsertException;
 use Illuminate\Database\Capsule\Manager as DB;
+use MiniRest\Helpers\StatusCode\StatusCode;
 
 class PropostaController extends Controller
 {
@@ -63,7 +64,7 @@ class PropostaController extends Controller
         
         if($prestadorId == null)
         {
-            return Response::json(['message' => 'Cadastre-se como prestador para poder criar uma proposta']);
+            return Response::json(['message' => 'Cadastre-se como prestador para poder criar uma proposta', StatusCode::REQUEST_ERROR]);
         }
         else{
             $verificaProposta = $this->proposta->getPrestadorProposta($servicoId, $prestadorId);
