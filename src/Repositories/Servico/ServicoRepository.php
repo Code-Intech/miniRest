@@ -38,7 +38,8 @@ class ServicoRepository
                 ->first();
             
             $contratante = DB::table('tb_user')
-                ->select('Nome_Completo')
+                ->select('Nome_Completo', 'idtb_prestador')
+                ->join('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
                 ->join('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
                 ->join('tb_servico', 'tb_contratante.idtb_contratante', '=', 'tb_servico.tb_contratante_idtb_contratante')
                 ->where('tb_servico.idtb_servico', $servico->idtb_servico)
@@ -86,7 +87,8 @@ class ServicoRepository
             ->first();
         
         $contratante = DB::table('tb_user')
-            ->select('Nome_Completo')
+            ->select('Nome_Completo', 'idtb_prestador')
+            ->join('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
             ->join('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
             ->join('tb_servico', 'tb_contratante.idtb_contratante', '=', 'tb_servico.tb_contratante_idtb_contratante')
             ->where('tb_servico.idtb_servico', $servicoId)
@@ -134,7 +136,8 @@ class ServicoRepository
             ->first();
         
             $contratante = DB::table('tb_user')
-                ->select('Nome_Completo')
+                ->select('Nome_Completo', 'idtb_prestador')
+                ->join('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
                 ->join('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
                 ->join('tb_servico', 'tb_contratante.idtb_contratante', '=', 'tb_servico.tb_contratante_idtb_contratante')
                 ->where('tb_servico.idtb_servico', $servicos->idtb_servico)
