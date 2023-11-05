@@ -23,11 +23,11 @@ class ServicoRepository
 
     public function getAll()
     {
-        $servicos = Servico::all();
+        $servicos = Servico::where('FlgStatus', '<>', 0)->get();
         $data = [];
 
         foreach($servicos as $servico){
-            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
+            $servicoAll = Servico::select('idtb_servico','tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servico->idtb_servico)
                 ->first();
             
@@ -74,8 +74,9 @@ class ServicoRepository
     public function find(int|string $servicoId)
     {
 
-        $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
+        $servicoAll = Servico::select('idtb_servico','tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicoId)
+                ->where('FlgStatus', '<>', 0)
                 ->first();
             
         $localidade = DB::table('tb_servico')
@@ -116,11 +117,13 @@ class ServicoRepository
 
     public function me(int $userId)
     {
-        $servico = Servico::where('tb_contratante_tb_user_idtb_user', $userId)->get();
+        $servico = Servico::where('tb_contratante_tb_user_idtb_user', $userId)
+        ->where('FlgStatus', '<>', 0)
+        ->get();
         $data = [];
 
         foreach($servico as $servicos){
-            $servicoAll = Servico::select('idtb_servico','Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
+            $servicoAll = Servico::select('idtb_servico','tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicos->idtb_servico)
                 ->first();
             
