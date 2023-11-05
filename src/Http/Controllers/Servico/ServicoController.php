@@ -198,6 +198,8 @@ class ServicoController extends Controller
 
     public function deleteServico(Request $request, $servicoId)
     {
+        $userId = Auth::id($request);
+        
         try
         {
             $this->servico->deleteServico($servicoId);
