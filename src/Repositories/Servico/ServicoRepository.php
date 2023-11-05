@@ -249,6 +249,20 @@ class ServicoRepository
             throw new ServiceNotFoundedException("Serviço não encontrado");
         }
     }
+
+    public function getServicoUser(int $userId)
+    {
+        $servico = $this->model->where('tb_contratante_tb_user_idtb_user', $userId)->value('tb_contratante_tb_user_idtb_user');
+        if($servico)
+        {
+            return $servico;
+        }
+        else
+        {
+            throw new ServiceNotFoundedException("Serviço não enonttrado");
+        }
+
+    }
 }
 
 ?>

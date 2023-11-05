@@ -62,6 +62,11 @@ class PropostaController extends Controller
         $prestadorId = $this->prestador->getPrestadorByUserId($userId);
         $verificaProposta = $this->proposta->getPrestadorProposta($servicoId, $prestadorId);
 
+        if($prestadorId == null)
+        {
+            return Response::json(['message' => 'Cadastre-se como prestador para poder criar uma proposta']);
+        }
+
         if($contratanteUserId == null){
             if($verificaProposta->isEmpty())
                 {
