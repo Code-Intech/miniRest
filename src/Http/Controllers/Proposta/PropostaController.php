@@ -88,7 +88,7 @@ class PropostaController extends Controller
 
                 }
                 else{
-                    return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
+                    return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.'], StatusCode::REQUEST_ERROR);
                 }
 
         }
@@ -114,12 +114,12 @@ class PropostaController extends Controller
 
                 }
                 else{
-                    return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.']);
+                    return Response::json(['message' => 'Você já inseriu uma proposta neste serviço.'], StatusCode::REQUEST_ERROR);
                 }
             }
             else
             {
-                return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!']);
+                return Response::json(['message' => 'Você não pode cadastrar uma proposta em seu próprio serviço!'], StatusCode::REQUEST_ERROR);
             }
         }   
     }
@@ -144,7 +144,7 @@ class PropostaController extends Controller
             }
         }
         else{
-            return Response::json(['message' => 'Este serviço já tem uma proposta aceita']);
+            return Response::json(['message' => 'Este serviço já tem uma proposta aceita'], StatusCode::REQUEST_ERROR);
         }
         
     }
