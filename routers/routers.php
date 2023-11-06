@@ -55,6 +55,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::delete('/servico/delete/{id}', [ServicoController::class, 'deleteServico']);
     Router::delete('/servico/delete/images/{id}', [ServicoController::class, 'deleteImages']);
     Router::get('/servico/me', [ServicoController::class, 'me']);
+    Router::get('/servico/images/{id}', [ServicoController::class, 'getImages']);
 
     //Proposta
     Router::post('/servico/proposta/{id}', [PropostaController::class, 'create']);

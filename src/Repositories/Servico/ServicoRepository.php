@@ -8,6 +8,7 @@ use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Exceptions\ServiceNotFoundedException;
 use MiniRest\Exceptions\ImagesNotFoundException;
 use MiniRest\Helpers\StatusCode\StatusCode;
+use MiniRest\Http\Response\Response;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class ServicoRepository
@@ -264,7 +265,23 @@ class ServicoRepository
         {
             throw new ServiceNotFoundedException("Serviço não enonttrado");
         }
+    }
 
+    public function getServicoImages(int $servicoId)
+    {
+        try
+        {
+            $images = DB::table('tb_img')
+                ->select('idtb_img as imageId', DB::raw("CONCAT('https://s3connectfreela.s3.sa-east-1.amazonaws.com/servico/', `IMG`) as image_url"))
+                ->where('tb_servico_idtb_servico', $servicoId)
+                ->get();
+            
+            return $images;
+        }
+        catch(\Exception $e)
+        {
+            return Response::json(['message' => 'Erro ao retornar imagens', $e->getMessage()], StatusCode::SERVER_ERROR);
+        }
     }
 }
 

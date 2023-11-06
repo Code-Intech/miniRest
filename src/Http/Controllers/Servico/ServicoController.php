@@ -314,4 +314,9 @@ class ServicoController extends Controller
         return Response::json(['message' => 'Imagens deletadas com sucesso!']);
     }
 
+    public function getImages($servicoId)
+    {
+        return Response::json($this->servico->getServicoImages($servicoId));
+    }
+
 }
