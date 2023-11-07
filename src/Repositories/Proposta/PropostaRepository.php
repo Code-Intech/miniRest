@@ -132,6 +132,26 @@ class PropostaRepository
             throw new PropostaNotFoundException("Proposta não encontrada.", StatusCode::SERVER_ERROR, $e);
         }
     }
+
+    public function getPropostaId(int $servicoId)
+    {
+        try
+        {
+            return DB::transaction(function() use($servicoId){
+                $proposta = $this->proposta->where('tb_servico_idtb_servico', $servicoId)
+                    ->where('Proposta_Aceita', 1)
+                    ->value('idtb_proposta');
+                
+                    return $proposta;
+            });
+            
+
+        }
+        catch(\Exception $e)
+        {
+            throw new PropostaNotFoundException("Proposta não encontrada.", StatusCode::SERVER_ERROR, $e);
+        }
+    }
 }
 
 

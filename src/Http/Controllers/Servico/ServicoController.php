@@ -23,18 +23,21 @@ use MiniRest\Actions\Servico\ServicoUpdateProfissaoAction;
 use MiniRest\DTO\Servico\ServicoUpdateProfissaoDTO;
 use MiniRest\Actions\Servico\ServicoUpdateHabilidadeAction;
 use MiniRest\DTO\Servico\ServicoUpdateHabilidadeDTO;
+use MiniRest\Repositories\Proposta\PropostaRepository;
 
 class ServicoController extends Controller
 {
     private ServicoRepository $servico;
     private ContratanteRepository $contratante;
     private AddressRepository $addressRepository;
+    private PropostaRepository $proposta;
 
     public function __construct()
     {
         $this->servico = new ServicoRepository();
         $this->contratante = new ContratanteRepository();
         $this->addressRepository = new AddressRepository();
+        $this->proposta = new PropostaRepository();
     }
 
     public function index()
@@ -317,6 +320,13 @@ class ServicoController extends Controller
     public function getImages($servicoId)
     {
         return Response::json($this->servico->getServicoImages($servicoId));
+    }
+
+    public function endServico(Request $request, $servicoId)
+    {
+        $data_finalizado = date("Y-m-d H:i:s");
+        $propostaId = $this->proposta->getPropostaId($servicoId);
+        echo $data_finalizado;
     }
 
 }
