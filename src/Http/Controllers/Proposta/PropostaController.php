@@ -2,6 +2,7 @@
 
 namespace MiniRest\Http\Controllers\Proposta;
 
+use MiniRest\Exceptions\PropostaAceitaNotFoundException;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
 use MiniRest\Http\Controllers\Controller;
@@ -31,6 +32,15 @@ class PropostaController extends Controller
     public function getAll(int $servicoId)
     {
         return Response::json(['proposta' => $this->proposta->getServicoProposta($servicoId)]);
+    }
+
+    public function getById(int $servicoId)
+    {
+        try {
+            Response::json(['proposta' => $this->proposta->getServicoPropostaAceitaByid($servicoId)]);
+        } catch (PropostaAceitaNotFoundException $exception) {
+            Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+        }
     }
 
     public function me(Request $request)

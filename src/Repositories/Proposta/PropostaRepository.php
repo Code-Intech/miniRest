@@ -2,6 +2,8 @@
 
 namespace MiniRest\Repositories\Proposta;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use MiniRest\Exceptions\PropostaAceitaNotFoundException;
 use MiniRest\Models\Proposta\Proposta;
 use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Exceptions\PropostaNotFoundException;
@@ -64,6 +66,22 @@ class PropostaRepository
 
         }catch(\Exception $e){
             throw new GetException("Não foi possível retornar os dados.", $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws PropostaAceitaNotFoundException
+     */
+    public function getServicoPropostaAceitaByid(int $servicoId)
+    {
+        try{
+
+            return Proposta::where('tb_servico_idtb_servico', $servicoId)
+                ->where('Proposta_Aceita', 1)
+                ->firstOrFail();
+
+        }catch(ModelNotFoundException $e){
+            throw new PropostaAceitaNotFoundException("Nenhuma proposta foi aceita até o momento");
         }
     }
 
