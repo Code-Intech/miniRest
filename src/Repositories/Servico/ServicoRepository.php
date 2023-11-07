@@ -283,6 +283,11 @@ class ServicoRepository
             return Response::json(['message' => 'Erro ao retornar imagens', $e->getMessage()], StatusCode::SERVER_ERROR);
         }
     }
+
+    public function finalizaServico(array $data, int $servicoId)
+    {
+        
+    }
 }
 
 ?>

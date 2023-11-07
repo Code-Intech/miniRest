@@ -24,6 +24,8 @@ use MiniRest\DTO\Servico\ServicoUpdateProfissaoDTO;
 use MiniRest\Actions\Servico\ServicoUpdateHabilidadeAction;
 use MiniRest\DTO\Servico\ServicoUpdateHabilidadeDTO;
 use MiniRest\Repositories\Proposta\PropostaRepository;
+use MiniRest\Actions\Servico\ServicoFinalizadoAction;
+use MiniRest\DTO\Servico\ServicoFinalizadoDTO;
 
 class ServicoController extends Controller
 {
@@ -326,7 +328,17 @@ class ServicoController extends Controller
     {
         $data_finalizado = date("Y-m-d H:i:s");
         $propostaId = $this->proposta->getPropostaId($servicoId);
-        echo $data_finalizado;
+        
+        try
+        {
+            $finalizaServicoAction = new ServicoFinalizadoAction();
+            $finalizaServicoAction->execute(new ServicoFinalizadoDTO($request, $data_finalizado, $propostaId, $servicoId));
+        }
+        catch(DatabaseInsertException $e)
+        {
+            DB::rollback();
+            return Response::json(['message' => 'Não foi possível finalizar o serviço', $e->getMessage()], $e->getCode());
+        }
     }
 
 }
