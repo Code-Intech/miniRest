@@ -85,14 +85,19 @@ class PropostaRepository
         }
     }
 
+    /**
+     * @throws PropostaNotFoundException|GetException
+     */
     public function me(int $userId)
     {
         try{
             $propostas = Proposta::select('idtb_proposta', 'Proposta_Aceita', 'Valor_Proposta', 'Comentario', 'Data_Proposta', 'tb_servico_idtb_servico', 'tb_servico_tb_contratante_idtb_contratante', 'tb_servico_tb_contratante_tb_user_idtb_user', 'tb_prestador_idtb_prestador', 'tb_prestador_tb_user_idtb_user')
                 ->where('tb_prestador_tb_user_idtb_user', $userId)
                 ->get();
+
+            if (count($propostas) <= 0) throw new PropostaNotFoundException('Sem propostas.');
             
-                return $propostas;
+            return $propostas;
 
         }catch(\Exception $e){
             throw new GetException("Não foi possível retornar os dados.", $e->getMessage());
