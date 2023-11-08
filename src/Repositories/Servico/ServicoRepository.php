@@ -175,10 +175,8 @@ class ServicoRepository
     public function storeServico(array $data)
     {
         try{
-            return DB::transaction(function() use($data){
-                $servico = $this->model->create($data);
-                return $servico;
-            });
+            $servico = $this->model->create($data);
+            return $servico;
         } catch(\Exception $e){
             throw new DatabaseInsertException("Erro ao criar serviço.", StatusCode::SERVER_ERROR, $e);
         }
