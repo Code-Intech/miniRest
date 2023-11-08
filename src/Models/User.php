@@ -25,7 +25,9 @@ class User extends Model
     ];
 
     protected $hidden = [
-        'Senha'
+        'Senha',
+        'created_at',
+        'updated_at'
     ];
 
 }

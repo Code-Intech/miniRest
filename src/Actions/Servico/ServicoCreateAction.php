@@ -21,8 +21,7 @@ class ServicoCreateAction
 
         DB::beginTransaction();
         try {
-
-            $servicoRepository = new ServicoRepository(new Servico());
+            $servicoRepository = new ServicoRepository();
             $servico = $servicoRepository->storeServico($data);
             $servicoId = $servico->idtb_servico;
 
@@ -50,6 +49,7 @@ class ServicoCreateAction
             }
             
             DB::commit();
+
             return $servicoId;
 
 

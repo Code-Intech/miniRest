@@ -44,7 +44,7 @@ class ServicoRepository
             
             $contratante = DB::table('tb_user')
                 ->select('Nome_Completo', 'idtb_prestador')
-                ->join('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
+                ->leftJoin('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
                 ->join('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
                 ->join('tb_servico', 'tb_contratante.idtb_contratante', '=', 'tb_servico.tb_contratante_idtb_contratante')
                 ->where('tb_servico.idtb_servico', $servico->idtb_servico)
@@ -179,10 +179,8 @@ class ServicoRepository
     public function storeServico(array $data)
     {
         try{
-            return DB::transaction(function() use($data){
-                $servico = $this->model->create($data);
-                return $servico;
-            });
+            $servico = $this->model->create($data);
+            return $servico;
         } catch(\Exception $e){
             throw new DatabaseInsertException("Erro ao criar serviço.", StatusCode::SERVER_ERROR, $e);
         }

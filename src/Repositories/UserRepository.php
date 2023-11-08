@@ -23,7 +23,16 @@ class UserRepository
 
     public function me(int $userId)
     {
-        return $this->user->where('idtb_user', '=', $userId)->first();
+        $user = $this->user->where('idtb_user', '=', $userId)
+            ->first();
+
+        $address = (new AddressRepository())->byId($user->tb_end_idtb_end);
+
+        $user['address'] = $address;
+
+        return [
+            'user' => $user,
+        ];
     }
 
     public function store(array $user)

@@ -22,4 +22,9 @@ class AddressRepository
     {
         $this->address->where('idtb_end', '=', $id)->update($address);
     }
+
+    public function byId(int $id)
+    {
+        return $this->address->where('idtb_end', '=', $id)->first();
+    }
 }
