@@ -100,7 +100,7 @@ class PropostaRepository
             return $propostas;
 
         }catch(\Exception $e){
-            throw new GetException("Não foi possível retornar os dados.", $e->getMessage());
+            throw new GetException("Não foi possível retornar os dados.");
         }
     }
 
