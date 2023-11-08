@@ -18,14 +18,14 @@ class ServicoFinalizadoAction
      public function execute(ServicoFinalizadoDTO $endDTO)
      {
         $data = $endDTO->toArray();
-        $servicoId = $data['idtb_servico'];
-        var_dump($data);
 
         DB::beginTransaction();
         try
         {
             $servicoRepository = new ServicoRepository(new ServicoFinalizado());
-            $finaliza = $servicoRepository->finalizaServico($data, $servicoId);
+            $finaliza = $servicoRepository->finalizaServico($data);
+
+            DB::commit();
         }
         catch(\Exception $e)
         {

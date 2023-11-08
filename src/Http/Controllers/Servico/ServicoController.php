@@ -333,6 +333,8 @@ class ServicoController extends Controller
         {
             $finalizaServicoAction = new ServicoFinalizadoAction();
             $finalizaServicoAction->execute(new ServicoFinalizadoDTO($request, $data_finalizado, $propostaId, $servicoId));
+
+            return Response::json(['message' => 'Serviço finalizado com sucesso!']);
         }
         catch(DatabaseInsertException $e)
         {
