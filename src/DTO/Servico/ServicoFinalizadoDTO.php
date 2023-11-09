@@ -21,7 +21,7 @@ class ServicoFinalizadoDTO implements DTO
     function toArray(): array
     {
         return [
-            'idtb_servico' => $this->servicoId,
+            'idtb_sv_finalizado' => $this->servicoId,
             'Data' => $this->data,
             'tb_proposta_idtb_proposta' => $this->tb_proposta_idtb_proposta
         ];

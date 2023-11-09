@@ -4,6 +4,7 @@ namespace MiniRest\Repositories\Servico;
 
 use MiniRest\Models\Servico\Servico;
 use MiniRest\Models\Servico\ServicoUploadImage;
+use MiniRest\Models\Servico\ServicoFinalizado;
 use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Exceptions\ServiceNotFoundedException;
 use MiniRest\Exceptions\ImagesNotFoundException;
@@ -11,15 +12,18 @@ use MiniRest\Helpers\StatusCode\StatusCode;
 use MiniRest\Http\Response\Response;
 use Illuminate\Database\Capsule\Manager as DB;
 
+
 class ServicoRepository
 {
     private $model;
+    private $modelFinaliza;
     private $imagesModel;
 
     public function __construct()
     {
         $this->model = new Servico();  
         $this->imagesModel = new ServicoUploadImage();
+        $this->modelFinaliza = new ServicoFinalizado();
     }
 
     public function getAll()
@@ -281,9 +285,17 @@ class ServicoRepository
 
     }
 
-    public function finalizaServico(array $data, int $servicoId)
+    public function finalizaServico(array $data)
     {
-        
+        try{
+            return DB::transaction(function() use($data){
+                $servico = $this->modelFinaliza->create($data);
+                return $servico;
+            });
+        } catch(\Exception $e){
+            var_dump($e->getMessage());
+            throw new DatabaseInsertException("Erro ao finalizar serviço.", StatusCode::SERVER_ERROR, $e->getMessage());
+        }
     }
 }
 
