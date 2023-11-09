@@ -8,6 +8,8 @@ use MiniRest\DTO\AddressCreateDTO;
 use MiniRest\DTO\Servico\ServicoCreateDTO;
 use MiniRest\Exceptions\DatabaseInsertException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use MiniRest\Exceptions\ImagesNotFoundException;
+use MiniRest\Exceptions\InvalidJsonResponseException;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
@@ -321,7 +323,11 @@ class ServicoController extends Controller
 
     public function getImages($servicoId)
     {
-        return Response::json($this->servico->getServicoImages($servicoId));
+        try {
+            return Response::json($this->servico->getServicoImages($servicoId));
+        } catch (ImagesNotFoundException $e) {
+            Response::json(['error' => ['message' => $e->getMessage()]], $e->getCode());
+        }
     }
 
     public function endServico(Request $request, $servicoId)

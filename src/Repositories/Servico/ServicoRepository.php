@@ -131,7 +131,7 @@ class ServicoRepository
                 ->first();
             
             $localidade = DB::table('tb_servico')
-            ->select('Cidade', 'Estado', 'Bairro')
+            ->select('tb_end.*')
             ->join('tb_end', 'tb_end.idtb_end', '=', 'tb_servico.tb_end_idtb_end')
             ->where('tb_servico.idtb_servico', $servicos->idtb_servico)
             ->first();
@@ -265,21 +265,20 @@ class ServicoRepository
         }
     }
 
+    /**
+     * @throws ImagesNotFoundException
+     */
     public function getServicoImages(int $servicoId)
     {
-        try
-        {
-            $images = DB::table('tb_img')
-                ->select('idtb_img as imageId', DB::raw("CONCAT('https://s3connectfreela.s3.sa-east-1.amazonaws.com/servico/', `IMG`) as image_url"))
-                ->where('tb_servico_idtb_servico', $servicoId)
-                ->get();
-            
-            return $images;
-        }
-        catch(\Exception $e)
-        {
-            return Response::json(['message' => 'Erro ao retornar imagens', $e->getMessage()], StatusCode::SERVER_ERROR);
-        }
+        $images = DB::table('tb_img')
+            ->select('idtb_img as imageId', DB::raw("CONCAT('https://s3connectfreela.s3.sa-east-1.amazonaws.com/servico/', `IMG`) as image_url"))
+            ->where('tb_servico_idtb_servico', $servicoId)
+            ->get();
+
+        if (count($images) <= 0) throw new ImagesNotFoundException('O serviço não possui imagens');
+
+        return $images;
+
     }
 
     public function finalizaServico(array $data, int $servicoId)
