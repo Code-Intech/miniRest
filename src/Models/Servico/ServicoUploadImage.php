@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ServicoUploadImage extends model
 {
     protected $table = "tb_img";
+    protected $primaryKey = 'idtb_img';
     protected $fillable = [
         "IMG",
         "tb_servico_idtb_servico",

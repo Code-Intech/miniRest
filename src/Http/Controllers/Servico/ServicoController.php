@@ -3,9 +3,11 @@
 namespace MiniRest\Http\Controllers\Servico;
 
 use MiniRest\Actions\Servico\ServicoCreateAction;
+use MiniRest\Actions\Servico\ServicoDeleteImageByIdAction;
 use MiniRest\Actions\Servico\ServicoUpdateAction;
 use MiniRest\DTO\AddressCreateDTO;
 use MiniRest\DTO\Servico\ServicoCreateDTO;
+use MiniRest\Exceptions\AccessNotAllowedException;
 use MiniRest\Exceptions\DatabaseInsertException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MiniRest\Exceptions\ImagesNotFoundException;
@@ -101,11 +103,11 @@ class ServicoController extends Controller
             $servicoCreateAction = new ServicoCreateAction();
             $servicoCreateAction->execute(new ServicoCreateDTO($request, $contratanteId, $userId, $enderecoId, $profissoes, $habilidades));
 
-            return Response::json(['message' => 'Serviço criado com sucesso'], 201);
+            Response::json(['message' => 'Serviço criado com sucesso'], 201);
 
         } catch (DatabaseInsertException $exception) {
             DB::rollback();
-            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+            Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
     }
 
@@ -136,11 +138,11 @@ class ServicoController extends Controller
             $servicoUpdateAction = new ServicoUpdateAction();
             $servicoUpdateAction->execute(new ServicoUpdateDTO($request, $servicoId, $contratanteId, $userId, $enderecoId));
 
-            return Response::json(['message' => 'Serviço atualizado com sucesso'], 201);
+            Response::json(['message' => 'Serviço atualizado com sucesso'], 201);
 
         }catch (DatabaseInsertException $exception) {
             DB::rollback();
-            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+            Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
 
 
@@ -165,11 +167,11 @@ class ServicoController extends Controller
             $servicoUpdateProfissaoAction = new ServicoUpdateProfissaoAction();
             $servicoUpdateProfissaoAction->execute(new ServicoUpdateProfissaoDTO($request, $servicoId, $contratanteId,$userId,$profissoes));
 
-            return Response::json(['message' => 'Profissões do Serviço atualizadas com sucesso'], 201);
+            Response::json(['message' => 'Profissões do Serviço atualizadas com sucesso'], 201);
 
         }catch(DatabaseInsertException $exception){
             DB::rollback();
-            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+            Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
 
 
@@ -194,11 +196,11 @@ class ServicoController extends Controller
             $servicoUpdateHabilidadeAction = new ServicoUpdateHabilidadeAction();
             $servicoUpdateHabilidadeAction->execute(new ServicoUpdateHabilidadeDTO($request, $servicoId, $contratanteId, $userId, $habilidades));
 
-            return Response::json(['message' => 'Habilidades do Serviço atualizadas com sucesso'], 201);
+            Response::json(['message' => 'Habilidades do Serviço atualizadas com sucesso'], 201);
 
         }catch(DatabaseInsertException $exception){
             DB::rollback();
-            return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+            Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
 
     }
@@ -210,19 +212,19 @@ class ServicoController extends Controller
         
         if($servicoUser != $userId)
         {
-            return Response::json(['message' => 'Você não pode deletar o serviço de outro usuário']);
+            Response::json(['message' => 'Você não pode deletar o serviço de outro usuário']);
         }
         else
         {
             try
             {
                 $this->servico->deleteServico($servicoId);
-                return Response::json(['message' => 'Serviço deletado com sucesso']);
+                Response::json(['message' => 'Serviço deletado com sucesso']);
             }
             catch(DatabaseInsertException $exception)
             {
                 DB::rollback();
-                return Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
+                Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
             }
         }
 
@@ -249,11 +251,11 @@ class ServicoController extends Controller
             $servicoUploadImageAction = new ServicoUploadImageAction();
             $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
 
-            return Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
+            Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
         }
         catch(DatabaseInsertException $exception){
             DB::rollback();
-            return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
+            Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
         }
 
     }
@@ -278,11 +280,11 @@ class ServicoController extends Controller
     //         $servicoUploadImageAction = new ServicoUploadImageAction();
     //         $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
 
-    //         return Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
+    //         Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
     //     }
     //     catch(DatabaseInsertException $exception){
     //         DB::rollback();
-    //         return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
+    //         Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
     //     }
     // }
 
@@ -307,24 +309,38 @@ class ServicoController extends Controller
             $servicoUploadImageAction = new ServicoUploadImageAction();
             $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
 
-            return Response::json(['message' => 'Imagens atualizadas com sucesso'], 201);
+            Response::json(['message' => 'Imagens atualizadas com sucesso'], 201);
         }
         catch(DatabaseInsertException $exception){
             DB::rollback();
-            return Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
+            Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
         }
     }
 
     public function deleteImages(Request $request, $servicoId)
     {
         $this->servico->deleteImages($servicoId);
-        return Response::json(['message' => 'Imagens deletadas com sucesso!']);
+        Response::json(['message' => 'Imagens deletadas com sucesso!']);
+    }
+
+    public function deleteImageByImageId(Request $request, int $id) {
+        try {
+            (new ServicoDeleteImageByIdAction())->execute(
+                $id,
+                Auth::id($request),
+                new ServicoRepository()
+            );
+
+            Response::json(['message' => 'Imagem deletada com sucesso!']);
+        } catch (AccessNotAllowedException|ImagesNotFoundException $e) {
+            Response::json(['error' => ['message' => $e->getMessage()]], $e->getCode());
+        }
     }
 
     public function getImages($servicoId)
     {
         try {
-            return Response::json($this->servico->getServicoImages($servicoId));
+            Response::json($this->servico->getServicoImages($servicoId));
         } catch (ImagesNotFoundException $e) {
             Response::json(['error' => ['message' => $e->getMessage()]], $e->getCode());
         }
@@ -340,12 +356,12 @@ class ServicoController extends Controller
             $finalizaServicoAction = new ServicoFinalizadoAction();
             $finalizaServicoAction->execute(new ServicoFinalizadoDTO($request, $data_finalizado, $propostaId, $servicoId));
 
-            return Response::json(['message' => 'Serviço finalizado com sucesso!']);
+            Response::json(['message' => 'Serviço finalizado com sucesso!']);
         }
         catch(DatabaseInsertException $e)
         {
             DB::rollback();
-            return Response::json(['message' => 'Não foi possível finalizar o serviço', $e->getMessage()], $e->getCode());
+            Response::json(['message' => 'Não foi possível finalizar o serviço', $e->getMessage()], $e->getCode());
         }
     }
 

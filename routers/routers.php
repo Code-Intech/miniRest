@@ -54,6 +54,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/servico/update/habilidades/{id}', [ServicoController::class, 'updateHabilidade']);
     Router::delete('/servico/delete/{id}', [ServicoController::class, 'deleteServico']);
     Router::delete('/servico/delete/images/{id}', [ServicoController::class, 'deleteImages']);
+    Router::delete('/servico/delete/image/{id}', [ServicoController::class, 'deleteImageByImageId']);
     Router::get('/servico/me', [ServicoController::class, 'me']);
     Router::get('/servico/images/{id}', [ServicoController::class, 'getImages']);
     Router::post('/servico/finaliza/{id}', [ServicoController::class, 'endServico']);

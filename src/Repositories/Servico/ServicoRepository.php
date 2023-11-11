@@ -2,6 +2,8 @@
 
 namespace MiniRest\Repositories\Servico;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use MiniRest\Exceptions\AccessNotAllowedException;
 use MiniRest\Models\Servico\Servico;
 use MiniRest\Models\Servico\ServicoUploadImage;
 use MiniRest\Models\Servico\ServicoFinalizado;
@@ -9,8 +11,8 @@ use MiniRest\Exceptions\DatabaseInsertException;
 use MiniRest\Exceptions\ServiceNotFoundedException;
 use MiniRest\Exceptions\ImagesNotFoundException;
 use MiniRest\Helpers\StatusCode\StatusCode;
-use MiniRest\Http\Response\Response;
 use Illuminate\Database\Capsule\Manager as DB;
+use MiniRest\Repositories\ContratanteRepository;
 
 
 class ServicoRepository
@@ -24,6 +26,39 @@ class ServicoRepository
         $this->model = new Servico();  
         $this->imagesModel = new ServicoUploadImage();
         $this->modelFinaliza = new ServicoFinalizado();
+    }
+
+    /**
+     * @param int $userId
+     * @throws AccessNotAllowedException
+     */
+    public function verifyServiceOwner(int $userId, int $imageId)
+    {
+        try {
+            // model do serviço :/
+            $contratanteId = (new ContratanteRepository())->getContratanteIdByUserId($userId);
+            $this->imagesModel
+                ->where('tb_servico_tb_contratante_idtb_contratante', $contratanteId)
+                ->where('idtb_img', $imageId)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $exception) {
+            throw new AccessNotAllowedException('Você não possui acesso para deletar a imagem selecionada');
+        }
+    }
+
+    /**
+     * @param int $imageId
+     * @throws ImagesNotFoundException
+     */
+    public function getImageById(int $imageId)
+    {
+        try {
+            $this->imagesModel
+                ->where('idtb_img', $imageId)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $exception) {
+            throw new ImagesNotFoundException('Imagem não encontrada.');
+        }
     }
 
     public function getAll()
@@ -245,6 +280,21 @@ class ServicoRepository
 
    }
 
+    /**
+     * @param $id
+     * @param $userId
+     * @throws ImagesNotFoundException
+     */
+    public function deleteImageByImageId($id, $userId)
+    {
+        try {
+            $this->imagesModel->where('idtb_img', $id)->firstOrFail()->delete();
+        } catch (ModelNotFoundException $exception) {
+            throw new ImagesNotFoundException('Imagem não encontrada!');
+        }
+
+    }
+
     public function getServicoId(int $servicoId)
     {   
         $servico = $this->model->where('idtb_servico', $servicoId)->first();
@@ -298,5 +348,3 @@ class ServicoRepository
         }
     }
 }
-
-?>
