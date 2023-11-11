@@ -23,7 +23,7 @@ class ServicoRepository
 
     public function __construct()
     {
-        $this->model = new Servico();  
+        $this->model = new Servico();
         $this->imagesModel = new ServicoUploadImage();
         $this->modelFinaliza = new ServicoFinalizado();
     }
@@ -66,17 +66,17 @@ class ServicoRepository
         $servicos = Servico::where('FlgStatus', '<>', 0)->get();
         $data = [];
 
-        foreach($servicos as $servico){
-            $servicoAll = Servico::select('idtb_servico','tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
+        foreach ($servicos as $servico) {
+            $servicoAll = Servico::select('idtb_servico', 'tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico', 'Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servico->idtb_servico)
                 ->first();
-            
+
             $localidade = DB::table('tb_servico')
                 ->select('Cidade', 'Estado', 'Bairro')
                 ->join('tb_end', 'tb_end.idtb_end', '=', 'tb_servico.tb_end_idtb_end')
                 ->where('tb_servico.idtb_servico', $servico->idtb_servico)
                 ->first();
-            
+
             $contratante = DB::table('tb_user')
                 ->select('Nome_Completo', 'idtb_prestador')
                 ->leftJoin('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
@@ -91,14 +91,14 @@ class ServicoRepository
                 ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
                 ->where('tb_servico_profissao.tb_servico_idtb_servico', $servico->idtb_servico)
                 ->get();
-            
-    
+
+
             $habilidades = DB::table('tb_servico_habilidade')
-            ->select('Habilidade', 'idtb_habilidades')
-            ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_servico_habilidade.tb_habilidades_idtb_habilidades')
-            ->where('tb_servico_habilidade.tb_servico_idtb_servico', $servico->idtb_servico)
-            ->get();
-            
+                ->select('Habilidade', 'idtb_habilidades')
+                ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_servico_habilidade.tb_habilidades_idtb_habilidades')
+                ->where('tb_servico_habilidade.tb_servico_idtb_servico', $servico->idtb_servico)
+                ->get();
+
 
             $data[] = [
                 'contratante' => $contratante,
@@ -115,20 +115,20 @@ class ServicoRepository
     public function find(int|string $servicoId)
     {
 
-        $servicoAll = Servico::select('idtb_servico','tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
-                ->where('idtb_servico', $servicoId)
-                ->where('FlgStatus', '<>', 0)
-                ->first();
-            
+        $servicoAll = Servico::select('idtb_servico', 'tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico', 'Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
+            ->where('idtb_servico', $servicoId)
+            ->where('FlgStatus', '<>', 0)
+            ->first();
+
         $localidade = DB::table('tb_servico')
             ->select('Cidade', 'Estado', 'Bairro')
             ->join('tb_end', 'tb_end.idtb_end', '=', 'tb_servico.tb_end_idtb_end')
             ->where('tb_servico.idtb_servico', $servicoId)
             ->first();
-        
+
         $contratante = DB::table('tb_user')
             ->select('Nome_Completo', 'idtb_prestador')
-            ->join('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
+            ->leftJoin('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
             ->join('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
             ->join('tb_servico', 'tb_contratante.idtb_contratante', '=', 'tb_servico.tb_contratante_idtb_contratante')
             ->where('tb_servico.idtb_servico', $servicoId)
@@ -140,13 +140,13 @@ class ServicoRepository
             ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
             ->where('tb_servico_profissao.tb_servico_idtb_servico', $servicoId)
             ->get();
-        
+
 
         $habilidades = DB::table('tb_servico_habilidade')
-        ->select('Habilidade', 'idtb_habilidades')
-        ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_servico_habilidade.tb_habilidades_idtb_habilidades')
-        ->where('tb_servico_habilidade.tb_servico_idtb_servico', $servicoId)
-        ->get();
+            ->select('Habilidade', 'idtb_habilidades')
+            ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_servico_habilidade.tb_habilidades_idtb_habilidades')
+            ->where('tb_servico_habilidade.tb_servico_idtb_servico', $servicoId)
+            ->get();
 
         return [
             'contratante' => $contratante,
@@ -160,27 +160,29 @@ class ServicoRepository
     public function me(int $userId)
     {
         $servico = Servico::where('tb_contratante_tb_user_idtb_user', $userId)
-        ->where('FlgStatus', '<>', 0)
-        ->get();
+            ->where('FlgStatus', '<>', 0)
+            ->get();
+
+        $contratanteId = (new ContratanteRepository())->getContratanteIdByUserId($userId);
+
         $data = [];
 
-        foreach($servico as $servicos){
-            $servicoAll = Servico::select('idtb_servico','tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico','Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
+        foreach ($servico as $servicos) {
+            $servicoAll = Servico::select('idtb_servico', 'tb_contratante_idtb_contratante', 'tb_contratante_tb_user_idtb_user', 'Titulo_Servico', 'Data_Inicio', 'Estimativa_de_distancia', 'Estimativa_Valor', 'Estimativa_Idade', 'Remoto_Presencial', 'Estimativa_de_termino', 'Desc', 'created_at')
                 ->where('idtb_servico', $servicos->idtb_servico)
                 ->first();
-            
+
             $localidade = DB::table('tb_servico')
-            ->select('tb_end.*')
-            ->join('tb_end', 'tb_end.idtb_end', '=', 'tb_servico.tb_end_idtb_end')
-            ->where('tb_servico.idtb_servico', $servicos->idtb_servico)
-            ->first();
-        
+                ->select('tb_end.*')
+                ->join('tb_end', 'tb_end.idtb_end', '=', 'tb_servico.tb_end_idtb_end')
+                ->where('tb_servico.idtb_servico', $servicos->idtb_servico)
+                ->first();
+
             $contratante = DB::table('tb_user')
                 ->select('Nome_Completo', 'idtb_prestador')
-                ->join('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
-                ->join('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
-                ->join('tb_servico', 'tb_contratante.idtb_contratante', '=', 'tb_servico.tb_contratante_idtb_contratante')
-                ->where('tb_servico.idtb_servico', $servicos->idtb_servico)
+                ->leftJoin('tb_prestador', 'tb_user.idtb_user', '=', 'tb_prestador.tb_user_idtb_user')
+                ->leftJoin('tb_contratante', 'tb_user.idtb_user', '=', 'tb_contratante.tb_user_idtb_user')
+                ->where('tb_contratante.idtb_contratante', $contratanteId)
                 ->first();
 
             $profissoes = DB::table('tb_servico_profissao')
@@ -189,13 +191,13 @@ class ServicoRepository
                 ->join('tb_categoria', 'tb_categoria.idtb_categoria', '=', 'tb_profissoes.tb_categoria_idtb_categoria')
                 ->where('tb_servico_profissao.tb_servico_idtb_servico', $servicos->idtb_servico)
                 ->get();
-            
+
 
             $habilidades = DB::table('tb_servico_habilidade')
-            ->select('Habilidade', 'idtb_habilidades')
-            ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_servico_habilidade.tb_habilidades_idtb_habilidades')
-            ->where('tb_servico_habilidade.tb_servico_idtb_servico', $servicos->idtb_servico)
-            ->get();
+                ->select('Habilidade', 'idtb_habilidades')
+                ->join('tb_habilidades', 'tb_habilidades.idtb_habilidades', '=', 'tb_servico_habilidade.tb_habilidades_idtb_habilidades')
+                ->where('tb_servico_habilidade.tb_servico_idtb_servico', $servicos->idtb_servico)
+                ->get();
 
             $data [] = [
                 'contratante' => $contratante,
@@ -208,15 +210,15 @@ class ServicoRepository
 
         return $data;
 
-        
+
     }
 
     public function storeServico(array $data)
     {
-        try{
+        try {
             $servico = $this->model->create($data);
             return $servico;
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             throw new DatabaseInsertException("Erro ao criar serviço.", StatusCode::SERVER_ERROR, $e);
         }
     }
@@ -224,12 +226,12 @@ class ServicoRepository
     public function updateServico(array $data)
     {
         $servicoId = $data['idtb_servico'];
-        try{
-            return DB::transaction(function() use($data, $servicoId){
+        try {
+            return DB::transaction(function () use ($data, $servicoId) {
                 $servico = $this->model->where('idtb_servico', $servicoId)->update($data);
                 return $servico;
             });
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw new DatabaseInsertException("Erro ao atualizar serviço.", StatusCode::SERVER_ERROR, $e);
         }
     }
@@ -257,28 +259,25 @@ class ServicoRepository
             'IMG' => $itenFileName,
             "tb_servico_idtb_servico" => $servicoId,
             "tb_servico_tb_contratante_idtb_contratante" => $contratanteId,
-            "tb_servico_tb_contratante_tb_user_idtb_user"=> $userId,
+            "tb_servico_tb_contratante_tb_user_idtb_user" => $userId,
         ]);
     }
 
-   public function deleteImages(int $servicoId)
-   {
-        try{
-            return DB::transaction(function() use($servicoId){
+    public function deleteImages(int $servicoId)
+    {
+        try {
+            return DB::transaction(function () use ($servicoId) {
                 $images = $this->imagesModel->where('tb_servico_idtb_servico', $servicoId);
-                if($images)
-                {
+                if ($images) {
                     $images->delete();
                 }
             });
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new ImagesNotFoundException("Imagens não encontradas");
         }
-        
 
-   }
+
+    }
 
     /**
      * @param $id
@@ -296,12 +295,11 @@ class ServicoRepository
     }
 
     public function getServicoId(int $servicoId)
-    {   
+    {
         $servico = $this->model->where('idtb_servico', $servicoId)->first();
         if ($servico) {
             return $servico->idtb_servico;
-        }
-        else{
+        } else {
             throw new ServiceNotFoundedException("Serviço não encontrado");
         }
     }
@@ -309,12 +307,9 @@ class ServicoRepository
     public function getServicoUser(int $servicoId)
     {
         $servico = $this->model->where('idtb_servico', $servicoId)->value('tb_contratante_tb_user_idtb_user');
-        if($servico)
-        {
+        if ($servico) {
             return $servico;
-        }
-        else
-        {
+        } else {
             throw new ServiceNotFoundedException("Serviço não enonttrado");
         }
     }
@@ -337,12 +332,12 @@ class ServicoRepository
 
     public function finalizaServico(array $data)
     {
-        try{
-            return DB::transaction(function() use($data){
+        try {
+            return DB::transaction(function () use ($data) {
                 $servico = $this->modelFinaliza->create($data);
                 return $servico;
             });
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             var_dump($e->getMessage());
             throw new DatabaseInsertException("Erro ao finalizar serviço.", StatusCode::SERVER_ERROR, $e->getMessage());
         }
