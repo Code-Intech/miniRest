@@ -224,6 +224,7 @@ class ServicoRepository
             $servico = $this->model->create($data);
             return $servico;
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
             throw new DatabaseInsertException("Erro ao criar serviço.", StatusCode::SERVER_ERROR, $e);
         }
     }
@@ -237,7 +238,7 @@ class ServicoRepository
                 return $servico;
             });
         } catch (\Exception $e) {
-            throw new DatabaseInsertException("Erro ao atualizar serviço.", StatusCode::SERVER_ERROR, $e);
+            throw new DatabaseInsertException("Erro ao atualizar serviço.", StatusCode::SERVER_ERROR, $e->getMessage());
         }
     }
 
