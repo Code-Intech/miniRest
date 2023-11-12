@@ -157,6 +157,9 @@ class ServicoRepository
         ];
     }
 
+    /**
+     * @throws ServiceNotFoundedException
+     */
     public function me(int $userId)
     {
         $servico = Servico::where('tb_contratante_tb_user_idtb_user', $userId)
@@ -207,6 +210,8 @@ class ServicoRepository
                 'servicoSkills' => $habilidades,
             ];
         }
+
+        if (count($data) <= 0) throw new ServiceNotFoundedException('Você não possui serviços');
 
         return $data;
 

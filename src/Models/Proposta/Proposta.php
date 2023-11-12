@@ -20,5 +20,8 @@ class Proposta extends Model
         'tb_prestador_tb_user_idtb_user',
         'FlgStatus'
     ];
+
+    protected $hidden = [
+        'Senha', # precisa desse hidden por conta do getById da proposta e serviço - Senha do user
+    ];
 }
-?>

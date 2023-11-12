@@ -12,6 +12,7 @@ use MiniRest\Exceptions\DatabaseInsertException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MiniRest\Exceptions\ImagesNotFoundException;
 use MiniRest\Exceptions\InvalidJsonResponseException;
+use MiniRest\Exceptions\ServiceNotFoundedException;
 use MiniRest\Http\Controllers\Controller;
 use MiniRest\Http\Request\Request;
 use MiniRest\Http\Response\Response;
@@ -60,8 +61,8 @@ class ServicoController extends Controller
     {
         try {
             Response::json(['servico' => $this->servico->me(Auth::id($request))]);
-        } catch (ModelNotFoundException $exception) {
-            
+        } catch (ServiceNotFoundedException $exception) {
+            Response::json(['error' => ['message' => $exception->getMessage()]], $exception->getCode());
         }
     }
 

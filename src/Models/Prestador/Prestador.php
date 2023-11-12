@@ -16,4 +16,8 @@ class Prestador extends Model
         'tb_user_idtb_user'
     ];
 
+    protected $hidden = [
+        'Senha', # precisa desse hidden por conta do getById da proposta e serviço - Senha do user
+    ];
+
 }
