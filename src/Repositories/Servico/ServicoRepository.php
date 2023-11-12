@@ -224,7 +224,6 @@ class ServicoRepository
             $servico = $this->model->create($data);
             return $servico;
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
             throw new DatabaseInsertException("Erro ao criar serviço.", StatusCode::SERVER_ERROR, $e);
         }
     }
