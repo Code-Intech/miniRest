@@ -66,7 +66,7 @@ class PrestadorRepository
     {
         $data = [];
 
-        $prestadorAll = Prestador::select('Nome_Empresa', 'Nome_completo','CNPJ', 'tb_user_idtb_user', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+        $prestadorAll = Prestador::select('tb_user.*', 'tb_prestador.*')
             ->where('idtb_prestador', $prestadorId)
             ->join('tb_user', 'tb_prestador.tb_user_idtb_user', 'tb_user.idtb_user')
             ->first();

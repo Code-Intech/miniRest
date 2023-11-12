@@ -77,6 +77,7 @@ class PropostaRepository
         try{
 
             return Proposta::where('tb_servico_idtb_servico', $servicoId)
+                ->leftJoin('tb_user', 'tb_user.idtb_user', 'tb_proposta.tb_servico_tb_contratante_tb_user_idtb_user')
                 ->where('Proposta_Aceita', 1)
                 ->firstOrFail();
 
