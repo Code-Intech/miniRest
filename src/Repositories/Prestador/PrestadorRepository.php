@@ -105,7 +105,8 @@ class PrestadorRepository
     {
         $prestador = Prestador::where('tb_user_idtb_user', $userId)->firstOrFail();
 
-        $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria')
+        $prestadorAll = Prestador::select('Nome_Empresa', 'CNPJ', 'idtb_prestador', 'Valor_Da_Hora', 'Valor_diaria', 'Telefone', 'Email')
+            ->join('tb_user', 'tb_prestador.tb_user_idtb_user', 'tb_user.idtb_user')
             ->where('idtb_prestador', $prestador->idtb_prestador)
             ->first();
 
