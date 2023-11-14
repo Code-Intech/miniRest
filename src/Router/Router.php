@@ -65,7 +65,7 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method == 'OPTIONS') {
-            Response::json('');
+            http_response_code(200);
         }
 
         $matches = [];
