@@ -64,6 +64,13 @@ class Router {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
 
+        if ($_SERVER['HTTPS'] !== 'on') {
+
+            var_dump('testestedasdasdasdasdasdasdasdasdasdas');
+            die('testestedasdasdasdasdasdasdasdasdasdas');
+
+        }
+
         if ($method == 'OPTIONS') {
             http_response_code(200);
             exit();
