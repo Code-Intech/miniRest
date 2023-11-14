@@ -65,10 +65,9 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($_SERVER['HTTPS'] !== 'on') {
-
-            var_dump('testestedasdasdasdasdasdasdasdasdasdas');
-            die('testestedasdasdasdasdasdasdasdasdasdas');
-
+            $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            header('Location: ' . $url, true, 301);
+            exit();
         }
 
         if ($method == 'OPTIONS') {
