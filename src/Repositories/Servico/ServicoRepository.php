@@ -237,7 +237,7 @@ class ServicoRepository
                 return $servico;
             });
         } catch (\Exception $e) {
-            throw new DatabaseInsertException("Erro ao atualizar serviço.", StatusCode::SERVER_ERROR, $e);
+            throw new DatabaseInsertException("Erro ao atualizar serviço.", StatusCode::SERVER_ERROR, $e->getMessage());
         }
     }
 

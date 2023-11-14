@@ -31,6 +31,7 @@ use MiniRest\DTO\Servico\ServicoUpdateHabilidadeDTO;
 use MiniRest\Repositories\Proposta\PropostaRepository;
 use MiniRest\Actions\Servico\ServicoFinalizadoAction;
 use MiniRest\DTO\Servico\ServicoFinalizadoDTO;
+use MiniRest\Models\Contratante;
 
 class ServicoController extends Controller
 {
@@ -68,9 +69,11 @@ class ServicoController extends Controller
 
     public function store(Request $request)
     {
+        
+
         $validation = $request->rules([
             'Titulo_Servico' => 'required',
-            'Data_Inicio' => 'required',
+            'Data_Inicio' => 'required',    
             'Estimativa_de_distancia' => 'required',
             'Estimativa_Valor' => 'required',
             'Estimativa_Idade' => 'required',
@@ -86,19 +89,19 @@ class ServicoController extends Controller
             return;
         }
 
-        $userId = Auth::id($request);
-        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
-
-        if(!$contratanteId)
-        {
-            $contratanteId = $this->contratante->storeContratante($userId);
-        }
-
         $enderecoDTO = new AddressCreateDTO($request);
         $enderecoId = $this->addressRepository->store($enderecoDTO->toArray());
 
         $profissoes = $request->json('profissoes');
         $habilidades = $request->json('habilidades');
+
+        $userId = Auth::id($request);
+        $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+
+        if(!$contratanteId){
+            $contratante = $this->contratante->storeContratante($userId);
+            $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
+        }
 
         try {
             $servicoCreateAction = new ServicoCreateAction();
@@ -260,34 +263,6 @@ class ServicoController extends Controller
         }
 
     }
-
-    // public function uploadAlbum(Request $request, $servicoId)
-    // {
-    //     $validation = $request->rules([
-    //         'image' => 'required|multipleFiles:jpg,jpeg,png,gif',
-    //     ])->validate('files');
-
-    //     if(!$validation){
-    //         $request->errors();
-    //         return;
-    //     }
-
-    //     $userId = Auth::id($request);   
-    //     $servicoId = $this->servico->getServicoId($servicoId);
-    //     $contratanteId = $this->contratante->getContratanteIdByUserId($userId);
-
-
-    //     try{
-    //         $servicoUploadImageAction = new ServicoUploadImageAction();
-    //         $servicoUploadImageAction->execute(new ServicoUploadImageDTO($request, $servicoId, $contratanteId, $userId));
-
-    //         Response::json(['message' => 'Imagens inseridas com sucesso'], 201);
-    //     }
-    //     catch(DatabaseInsertException $exception){
-    //         DB::rollback();
-    //         Response::json(['error' => ['message'=> $exception->getMessage()]], $exception->getCode());
-    //     }
-    // }
 
     public function updateImages(Request $request, $servicoId)
     {

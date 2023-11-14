@@ -41,9 +41,6 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
     Router::patch('/prestador/update', [PrestadorController::class, 'update']);
     Router::get('/prestador/me', [PrestadorController::class, 'me']);
 
-    //Contratate
-    Router::post('/contratante/create', [ContratanteController::class, 'store']);
-
     // Serviço
     Router::post('/servico/create', [ServicoController::class, 'store']);
     Router::post('/servico/upload/img/{id}', [ServicoController::class, 'uploadImage']);
