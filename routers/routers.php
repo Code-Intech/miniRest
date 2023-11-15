@@ -83,6 +83,7 @@ Router::prefix('/api')->group([AuthMiddleware::class], function () {
 Router::get('/health', [HealthController::class, 'health']);
 Router::get('/', [HealthController::class, 'health']);
 
+
 // Gender
 Router::get('/gender', [GenderController::class, 'index']);
 
