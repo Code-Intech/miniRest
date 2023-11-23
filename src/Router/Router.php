@@ -64,10 +64,13 @@ class Router {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
 
-        if ($_SERVER['HTTPS'] !== 'on') {
-            $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            header('Location: ' . $url, true, 301);
-            exit();
+
+        if ($_SERVER['HTTP_HOST'] !== 'localhost:8000') {
+            if ($_SERVER['HTTPS'] !== 'on') {
+                $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+                header('Location: ' . $url, true, 301);
+                exit();
+            }
         }
 
         if ($method == 'OPTIONS') {

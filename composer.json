@@ -6,7 +6,8 @@
         },
         "classmap": [
             "src/Models"
-        ]
+        ],
+        "files": ["src/Helpers/helpers.php"]
     },
     "authors": [
         {
